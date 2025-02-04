@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relevo AEA Stores</title>
+    <style>
+        /* Estilos generales */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #ADD8E6;
+            color: #333;
+            transition: background-color 0.3s ease;
+        }
+
+        header {
+            background-color: #003e6e;
+            padding: 20px;
+            text-align: center;
+            color: white;
+        }
+
+        h1 {
+            margin: 30px 0;
+        }
+
+        .container {
+            width: 95%;
+            max-width: 1500px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #ddd;
+            justify-content: center;
+        }
+
+        .tab {
+            flex: 1;
+            text-align: center;
+            padding: 10px;
+            cursor: pointer;
+            background-color: #f1f1f1;
+            border: 1px solid #ddd;
+            border-bottom: none;
+        }
+
+        .tab.active {
+            background-color: #fff;
+            font-weight: bold;
+            border-bottom: 2px solid white;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: center;
+            vertical-align: middle;
+            font-size: 18px;
+        }
+
+        th {
+            background-color: #f1f1f1;
+        }
+
+        tbody {
+            display: block;
+            max-height: 250px;
+            overflow-y: auto;
+        }
+
+        table thead, table tbody tr {
+            display: table;
+            width: 100%;
+            table-layout: fixed;
+        }
+
+        table th:nth-child(6),
+        table td:nth-child(6) {
+            width: 50%;
+        }
+
+        table th:nth-child(1),
+        table td:nth-child(1) {
+            width: 15%;
+        }
+
+        table th:nth-child(2),
+        table td:nth-child(2),
+        table th:nth-child(3),
+        table td:nth-child(3) {
+            width: 12%;
+        }
+
+        table th:nth-child(4),
+        table td:nth-child(4),
+        table th:nth-child(5),
+        table td:nth-child(5),
+        table th:nth-child(7),
+        table td:nth-child(7),
+        table th:nth-child(8),
+        table td:nth-child(8) {
+            width: 10%;
+        }
+
+        input, select {
+            text-align: center;
+            margin: 5px auto;
+            width: 90%;
+            padding: 5px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+
+        button {
+            background-color: #ff6c00;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px auto;
+            display: block;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #e65c00;
+        }
+
+        button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #003e6e;
+            color: white;
+            position: relative;
+        }
+
+        .toggle-button {
+            background-color: #003e6e;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        .toggle-button:hover {
+            background-color: #002f54;
+        }
+
+        select.prioridad {
+            font-weight: bold;
+            text-align: center;
+        }
+
+        select.prioridad.alta {
+            background-color: red;
+            color: white;
+        }
+
+        select.prioridad.media {
+            background-color: yellow;
+            color: black;
+        }
+
+        select.prioridad.baja {
+            background-color: green;
+            color: white;
+        }
+
+        td[contenteditable="true"] {
+            width: 100%;
+            max-width: 100%;
+            white-space: nowrap;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                width: 95%;
+            }
+
+            th, td {
+                font-size: 14px;
+            }
+
+            button {
+                padding: 8px 15px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Relevo AEA Stores</h1>
+    </header>
+
+    <main>
+        <div class="container">
+            <div class="tabs">
+                <div class="tab active" onclick="showTab('relevo-supervisores')">Relevo Supervisores</div>
+                <div class="tab" onclick="showTab('relevo-oficiales')">Relevo Oficiales</div>
+            </div>
+
+            <div id="relevo-supervisores" class="tab-content active">
+                <h2>Relevo Supervisores</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Número de Personal</th>
+                            <th>Fecha</th>
+                            <th>Fecha Fin</th>
+                            <th>Asunto</th>
+                            <th>Prioridad</th>
+                            <th>Comentarios</th>
+                            <th>Archivo PDF</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabla-supervisores"></tbody>
+                </table>
+                <button onclick="agregarFila('supervisores')">Agregar Relevo</button>
+                <button class="toggle-button" onclick="toggleHistorico('historico-supervisores')">Mostrar/Ocultar Histórico Supervisores</button>
+                <div id="historico-supervisores" style="display:none">
+                    <h3>Histórico Supervisores</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Número de Personal</th>
+                                <th>Fecha</th>
+                                <th>Fecha Fin</th>
+                                <th>Asunto</th>
+                                <th>Prioridad</th>
+                                <th>Comentarios</th>
+                                <th>Archivo PDF</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="historico-supervisores-body"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="relevo-oficiales" class="tab-content">
+                <h2>Relevo Oficiales</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Número de Personal</th>
+                            <th>Fecha</th>
+                            <th>Fecha Fin</th>
+                            <th>Asunto</th>
+                            <th>Prioridad</th>
+                            <th>Comentarios</th>
+                            <th>Archivo PDF</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabla-oficiales"></tbody>
+                </table>
+                <button onclick="agregarFila('oficiales')">Agregar Relevo</button>
+                <button class="toggle-button" onclick="toggleHistorico('historico-oficiales')">Mostrar/Ocultar Histórico Oficiales</button>
+                <div id="historico-oficiales" style="display:none">
+                    <h3>Histórico Oficiales</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Número de Personal</th>
+                                <th>Fecha</th>
+                                <th>Fecha Fin</th>
+                                <th>Asunto</th>
+                                <th>Prioridad</th>
+                                <th>Comentarios</th>
+                                <th>Archivo PDF</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="historico-oficiales-body"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Relevo AEA Stores. Todos los derechos reservados.</p>
+    </footer>
+
+    <script>
+        // Variables
+        let supervisoresData = JSON.parse(localStorage.getItem('supervisores')) || [];
+        let oficialesData = JSON.parse(localStorage.getItem('oficiales')) || [];
+        let historicoSupervisores = JSON.parse(localStorage.getItem('historicoSupervisores')) || [];
+        let historicoOficiales = JSON.parse(localStorage.getItem('historicoOficiales')) || [];
+
+        // Función para mostrar el contenido de las pestañas
+        function showTab(tabId) {
+            const tabs = document.querySelectorAll('.tab');
+            const tabContents = document.querySelectorAll('.tab-content');
+
+            tabs.forEach(tab => tab.classList.remove('active'));
+            tabContents.forEach(content => content.classList.remove('active'));
+
+            document.getElementById(tabId).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        // Función para agregar una fila nueva
+        function agregarFila(tipo) {
+            const fila = {
+                numeroPersonal: '',
+                fecha: '',
+                fechaFin: '',
+                asunto: '',
+                prioridad: 'baja',
+                comentarios: '',
+                archivo: ''
+            };
+
+            if (tipo === 'supervisores') {
+                supervisoresData.push(fila);
+                localStorage.setItem('supervisores', JSON.stringify(supervisoresData));
+                renderizarTabla();
+            } else {
+                oficialesData.push(fila);
+                localStorage.setItem('oficiales', JSON.stringify(oficialesData));
+                renderizarTabla();
+            }
+        }
+
+        // Función para renderizar la tabla
+        function renderizarTabla() {
+            let tablaSupervisores = document.getElementById('tabla-supervisores');
+            tablaSupervisores.innerHTML = '';
+            supervisoresData.forEach((fila, index) => {
+                let tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><input type="number" value="${fila.numeroPersonal}" /></td>
+                    <td><input type="date" value="${fila.fecha}" /></td>
+                    <td><input type="date" value="${fila.fechaFin}" /></td>
+                    <td contenteditable="true">${fila.asunto}</td>
+                    <td>
+                        <select class="prioridad ${fila.prioridad}">
+                            <option value="alta" ${fila.prioridad === 'alta' ? 'selected' : ''}>Alta</option>
+                            <option value="media" ${fila.prioridad === 'media' ? 'selected' : ''}>Media</option>
+                            <option value="baja" ${fila.prioridad === 'baja' ? 'selected' : ''}>Baja</option>
+                        </select>
+                    </td>
+                    <td><input type="text" value="${fila.comentarios}" /></td>
+                    <td><input type="file" accept=".pdf,.jpg,.jpeg,.png" /></td>
+                    <td>
+                        <button onclick="moverHistorico(${index}, 'supervisores')">Mover a Histórico</button>
+                    </td>
+                `;
+                tablaSupervisores.appendChild(tr);
+            });
+
+            let tablaOficiales = document.getElementById('tabla-oficiales');
+            tablaOficiales.innerHTML = '';
+            oficialesData.forEach((fila, index) => {
+                let tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><input type="number" value="${fila.numeroPersonal}" /></td>
+                    <td><input type="date" value="${fila.fecha}" /></td>
+                    <td><input type="date" value="${fila.fechaFin}" /></td>
+                    <td contenteditable="true">${fila.asunto}</td>
+                    <td>
+                        <select class="prioridad ${fila.prioridad}">
+                            <option value="alta" ${fila.prioridad === 'alta' ? 'selected' : ''}>Alta</option>
+                            <option value="media" ${fila.prioridad === 'media' ? 'selected' : ''}>Media</option>
+                            <option value="baja" ${fila.prioridad === 'baja' ? 'selected' : ''}>Baja</option>
+                        </select>
+                    </td>
+                    <td><input type="text" value="${fila.comentarios}" /></td>
+                    <td><input type="file" accept=".pdf,.jpg,.jpeg,.png" /></td>
+                    <td>
+                        <button onclick="moverHistorico(${index}, 'oficiales')">Mover a Histórico</button>
+                    </td>
+                `;
+                tablaOficiales.appendChild(tr);
+            });
+
+            // Renderizar histórico
+            renderizarHistorico();
+        }
+
+        // Función para mover a histórico
+        function moverHistorico(index, tipo) {
+            if (tipo === 'supervisores') {
+                let fila = supervisoresData.splice(index, 1)[0];
+                historicoSupervisores.push(fila);
+                localStorage.setItem('supervisores', JSON.stringify(supervisoresData));
+                localStorage.setItem('historicoSupervisores', JSON.stringify(historicoSupervisores));
+            } else {
+                let fila = oficialesData.splice(index, 1)[0];
+                historicoOficiales.push(fila);
+                localStorage.setItem('oficiales', JSON.stringify(oficialesData));
+                localStorage.setItem('historicoOficiales', JSON.stringify(historicoOficiales));
+            }
+            renderizarTabla();
+        }
+
+        // Función para mostrar/ocultar el histórico
+        function toggleHistorico(historicoId) {
+            const historico = document.getElementById(historicoId);
+            historico.style.display = historico.style.display === 'none' ? 'block' : 'none';
+        }
+
+        // Función para renderizar histórico
+        function renderizarHistorico() {
+            let historicoSupervisoresBody = document.getElementById('historico-supervisores-body');
+            historicoSupervisoresBody.innerHTML = '';
+            historicoSupervisores.forEach(fila => {
+                let tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${fila.numeroPersonal}</td>
+                    <td>${fila.fecha}</td>
+                    <td>${fila.fechaFin}</td>
+                    <td>${fila.asunto}</td>
+                    <td>${fila.prioridad}</td>
+                    <td>${fila.comentarios}</td>
+                    <td>${fila.archivo}</td>
+                    <td><button onclick="eliminarFilaHistorico(${historicoSupervisores.indexOf(fila)}, 'supervisores')">Eliminar</button></td>
+                `;
+                historicoSupervisoresBody.appendChild(tr);
+            });
+
+            let historicoOficialesBody = document.getElementById('historico-oficiales-body');
+            historicoOficialesBody.innerHTML = '';
+            historicoOficiales.forEach(fila => {
+                let tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${fila.numeroPersonal}</td>
+                    <td>${fila.fecha}</td>
+                    <td>${fila.fechaFin}</td>
+                    <td>${fila.asunto}</td>
+                    <td>${fila.prioridad}</td>
+                    <td>${fila.comentarios}</td>
+                    <td>${fila.archivo}</td>
+                    <td><button onclick="eliminarFilaHistorico(${historicoOficiales.indexOf(fila)}, 'oficiales')">Eliminar</button></td>
+                `;
+                historicoOficialesBody.appendChild(tr);
+            });
+        }
+
+        // Función para eliminar fila del histórico
+        function eliminarFilaHistorico(index, tipo) {
+            if (tipo === 'supervisores') {
+                historicoSupervisores.splice(index, 1);
+                localStorage.setItem('historicoSupervisores', JSON.stringify(historicoSupervisores));
+            } else {
+                historicoOficiales.splice(index, 1);
+                localStorage.setItem('historicoOficiales', JSON.stringify(historicoOficiales));
+            }
+            renderizarHistorico();
+        }
+
+        // Inicializar la tabla
+        renderizarTabla();
+    </script>
+</body>
+</html>
