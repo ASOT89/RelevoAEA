@@ -92,7 +92,6 @@
                 <div class="table-wrapper">
                     <h2>Relevo Supervisores</h2>
                     <button onclick="agregarFila('supervisores')">Agregar Relevo</button>
-                    <button onclick="mostrarHistorico('supervisores')">Mostrar Histórico</button>
                     <table>
                         <thead>
                             <tr>
@@ -109,11 +108,10 @@
                         <tbody id="tabla-supervisores"></tbody>
                     </table>
                 </div>
-                
+
                 <div class="table-wrapper">
                     <h2>Relevo Oficiales</h2>
                     <button onclick="agregarFila('oficiales')">Agregar Relevo</button>
-                    <button onclick="mostrarHistorico('oficiales')">Mostrar Histórico</button>
                     <table>
                         <thead>
                             <tr>
@@ -135,25 +133,11 @@
     </main>
 
     <script>
-        // Datos iniciales
-        let supervisoresData = JSON.parse(localStorage.getItem('supervisores')) || [];
-        let oficialesData = JSON.parse(localStorage.getItem('oficiales')) || [];
-        let historicoSupervisores = JSON.parse(localStorage.getItem('historicoSupervisores')) || [];
-        let historicoOficiales = JSON.parse(localStorage.getItem('historicoOficiales')) || [];
+        // Inicialización de datos
+        let supervisoresData = [];
+        let oficialesData = [];
 
-        // Validar datos iniciales
-        function limpiarDatosIniciales() {
-            if (!Array.isArray(supervisoresData)) supervisoresData = [];
-            if (!Array.isArray(oficialesData)) oficialesData = [];
-            if (!Array.isArray(historicoSupervisores)) historicoSupervisores = [];
-            if (!Array.isArray(historicoOficiales)) historicoOficiales = [];
-            localStorage.setItem('supervisores', JSON.stringify(supervisoresData));
-            localStorage.setItem('oficiales', JSON.stringify(oficialesData));
-            localStorage.setItem('historicoSupervisores', JSON.stringify(historicoSupervisores));
-            localStorage.setItem('historicoOficiales', JSON.stringify(historicoOficiales));
-        }
-
-        // Agregar una fila nueva
+        // Función para agregar una fila
         function agregarFila(tipo) {
             const fila = {
                 numeroPersonal: '',
@@ -167,48 +151,18 @@
 
             if (tipo === 'supervisores') {
                 supervisoresData.push(fila);
-                localStorage.setItem('supervisores', JSON.stringify(supervisoresData));
             } else {
                 oficialesData.push(fila);
-                localStorage.setItem('oficiales', JSON.stringify(oficialesData));
             }
-            renderizarTabla();
+            renderizarTabla(tipo);
         }
 
-        // Actualizar datos de una fila
-        function actualizarDato(index, tipo, campo, valor) {
-            if (tipo === 'supervisores') {
-                supervisoresData[index][campo] = valor;
-                localStorage.setItem('supervisores', JSON.stringify(supervisoresData));
-            } else {
-                oficialesData[index][campo] = valor;
-                localStorage.setItem('oficiales', JSON.stringify(oficialesData));
-            }
-        }
+        // Función para renderizar la tabla
+        function renderizarTabla(tipo) {
+            const tabla = tipo === 'supervisores' ? 'tabla-supervisores' : 'tabla-oficiales';
+            const data = tipo === 'supervisores' ? supervisoresData : oficialesData;
 
-        // Mover fila al histórico
-        function moverAHistorico(index, tipo) {
-            if (tipo === 'supervisores') {
-                historicoSupervisores.push(supervisoresData.splice(index, 1)[0]);
-                localStorage.setItem('supervisores', JSON.stringify(supervisoresData));
-                localStorage.setItem('historicoSupervisores', JSON.stringify(historicoSupervisores));
-            } else {
-                historicoOficiales.push(oficialesData.splice(index, 1)[0]);
-                localStorage.setItem('oficiales', JSON.stringify(oficialesData));
-                localStorage.setItem('historicoOficiales', JSON.stringify(historicoOficiales));
-            }
-            renderizarTabla();
-        }
-
-        // Renderizar tabla
-        function renderizarTabla() {
-            document.getElementById('tabla-supervisores').innerHTML = generarFilas(supervisoresData, 'supervisores');
-            document.getElementById('tabla-oficiales').innerHTML = generarFilas(oficialesData, 'oficiales');
-        }
-
-        // Generar filas de la tabla
-        function generarFilas(data, tipo) {
-            return data.map((fila, index) => `
+            document.getElementById(tabla).innerHTML = data.map((fila, index) => `
                 <tr class="prioridad-${fila.prioridad}">
                     <td><input type="text" value="${fila.numeroPersonal}" onchange="actualizarDato(${index}, '${tipo}', 'numeroPersonal', this.value)" /></td>
                     <td><input type="date" value="${fila.fecha}" onchange="actualizarDato(${index}, '${tipo}', 'fecha', this.value)" /></td>
@@ -223,29 +177,44 @@
                     </td>
                     <td><input type="text" value="${fila.comentarios}" onchange="actualizarDato(${index}, '${tipo}', 'comentarios', this.value)" /></td>
                     <td><input type="file" accept=".pdf" onchange="subirArchivo(event, ${index}, '${tipo}')" /></td>
-                    <td><button onclick="moverAHistorico(${index}, '${tipo}')">Histórico</button></td>
+                    <td><button onclick="eliminarFila(${index}, '${tipo}')">Eliminar</button></td>
                 </tr>`).join('');
         }
 
-        // Subir archivo PDF
+        // Función para actualizar los datos de una fila
+        function actualizarDato(index, tipo, campo, valor) {
+            if (tipo === 'supervisores') {
+                supervisoresData[index][campo] = valor;
+            } else {
+                oficialesData[index][campo] = valor;
+            }
+        }
+
+        // Función para eliminar una fila
+        function eliminarFila(index, tipo) {
+            if (tipo === 'supervisores') {
+                supervisoresData.splice(index, 1);
+            } else {
+                oficialesData.splice(index, 1);
+            }
+            renderizarTabla(tipo);
+        }
+
+        // Función para subir archivo
         function subirArchivo(event, index, tipo) {
-            let file = event.target.files[0];
+            const file = event.target.files[0];
             if (file) {
-                let reader = new FileReader();
+                const reader = new FileReader();
                 reader.onload = function(e) {
                     if (tipo === 'supervisores') {
                         supervisoresData[index].archivo = e.target.result;
                     } else {
                         oficialesData[index].archivo = e.target.result;
                     }
-                    localStorage.setItem(tipo, JSON.stringify(tipo === 'supervisores' ? supervisoresData : oficialesData));
                 };
                 reader.readAsDataURL(file);
             }
         }
-
-        limpiarDatosIniciales();
-        renderizarTabla();
     </script>
 </body>
 </html>
