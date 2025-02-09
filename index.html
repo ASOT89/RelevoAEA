@@ -163,7 +163,7 @@
             const data = tipo === 'supervisores' ? supervisoresData : oficialesData;
 
             document.getElementById(tabla).innerHTML = data.map((fila, index) => `
-                <tr class="prioridad-${fila.prioridad}">
+                <tr>
                     <td><input type="text" value="${fila.numeroPersonal}" onchange="actualizarDato(${index}, '${tipo}', 'numeroPersonal', this.value)" /></td>
                     <td><input type="date" value="${fila.fecha}" onchange="actualizarDato(${index}, '${tipo}', 'fecha', this.value)" /></td>
                     <td><input type="date" value="${fila.fechaFin}" onchange="actualizarDato(${index}, '${tipo}', 'fechaFin', this.value)" /></td>
@@ -188,6 +188,7 @@
             } else {
                 oficialesData[index][campo] = valor;
             }
+            renderizarTabla(tipo);
         }
 
         // Función para eliminar una fila
