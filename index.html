@@ -92,17 +92,17 @@
 
         th:nth-child(4),
         td:nth-child(4) {
-            width: 35%;
+            width: 30%;
         }
 
         th:nth-child(6),
         td:nth-child(6) {
-            width: 25%;
+            width: 35%;
         }
 
         th:nth-child(7),
         td:nth-child(7) {
-            width: 10%;
+            width: 8%;
         }
 
         .prioridad-baja {
@@ -195,106 +195,5 @@
             </div>
         </div>
     </main>
-
-    <script>
-        // Variables
-        let supervisoresData = [];
-        let oficialesData = [];
-
-        function showTab(tabId) {
-            const tabs = document.querySelectorAll('.tab');
-            const tabContents = document.querySelectorAll('.tab-content');
-
-            tabs.forEach(tab => tab.classList.remove('active'));
-            tabContents.forEach(content => content.classList.remove('active'));
-
-            document.getElementById(tabId).classList.add('active');
-            event.target.classList.add('active');
-        }
-
-        function agregarFila(tipo) {
-            const fila = {
-                numeroPersonal: '',
-                fecha: '',
-                fechaFin: '',
-                asunto: '',
-                prioridad: 'baja',
-                comentarios: '',
-                archivo: ''
-            };
-
-            if (tipo === 'supervisores') {
-                supervisoresData.push(fila);
-            } else {
-                oficialesData.push(fila);
-            }
-            renderizarTabla(tipo);
-        }
-
-        function renderizarTabla(tipo) {
-            const tabla = tipo === 'supervisores' ? 'tabla-supervisores' : 'tabla-oficiales';
-            const data = tipo === 'supervisores' ? supervisoresData : oficialesData;
-
-            document.getElementById(tabla).innerHTML = data.map((fila, index) => `
-                <tr class="prioridad-${fila.prioridad}">
-                    <td><input type="text" value="${fila.numeroPersonal}" onchange="actualizarDato(${index}, '${tipo}', 'numeroPersonal', this.value)" /></td>
-                    <td><input type="date" value="${fila.fecha}" onchange="actualizarDato(${index}, '${tipo}', 'fecha', this.value)" /></td>
-                    <td><input type="date" value="${fila.fechaFin}" onchange="actualizarDato(${index}, '${tipo}', 'fechaFin', this.value)" /></td>
-                    <td contenteditable="true" onblur="actualizarDato(${index}, '${tipo}', 'asunto', this.innerText)" style="width: 95%;">${fila.asunto}</td>
-                    <td>
-                        <select onchange="actualizarPrioridad(${index}, '${tipo}', this.value)">
-                            <option value="baja" ${fila.prioridad === 'baja' ? 'selected' : ''}>Baja</option>
-                            <option value="media" ${fila.prioridad === 'media' ? 'selected' : ''}>Media</option>
-                            <option value="alta" ${fila.prioridad === 'alta' ? 'selected' : ''}>Alta</option>
-                        </select>
-                    </td>
-                    <td><textarea onchange="actualizarDato(${index}, '${tipo}', 'comentarios', this.value)">${fila.comentarios}</textarea></td>
-                    <td><input type="file" accept=".pdf" onchange="subirArchivo(event, ${index}, '${tipo}')" style="width: 90%;" /></td>
-                    <td><button onclick="eliminarFila(${index}, '${tipo}')">Eliminar</button></td>
-                </tr>`).join('');
-        }
-
-        function actualizarDato(index, tipo, campo, valor) {
-            if (tipo === 'supervisores') {
-                supervisoresData[index][campo] = valor;
-            } else {
-                oficialesData[index][campo] = valor;
-            }
-        }
-
-        function actualizarPrioridad(index, tipo, valor) {
-            if (tipo === 'supervisores') {
-                supervisoresData[index].prioridad = valor;
-            } else {
-                oficialesData[index].prioridad = valor;
-            }
-            renderizarTabla(tipo);
-        }
-
-        function eliminarFila(index, tipo) {
-            if (tipo === 'supervisores') {
-                supervisoresData.splice(index, 1);
-            } else {
-                oficialesData.splice(index, 1);
-            }
-            renderizarTabla(tipo);
-        }
-
-        function subirArchivo(event, index, tipo) {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    if (tipo === 'supervisores') {
-                        supervisoresData[index].archivo = e.target.result;
-                    } else {
-                        oficialesData[index].archivo = e.target.result;
-                    }
-                };
-                reader.readAsDataURL(file);
-            }
-        }
-
-    </script>
 </body>
 </html>
