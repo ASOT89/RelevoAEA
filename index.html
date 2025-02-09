@@ -105,10 +105,9 @@
                     <tbody id="tabla-supervisores"></tbody>
                 </table>
                 <button onclick="agregarFila('supervisores')">Agregar Relevo</button>
-                <button onclick="exportarExcel('supervisores')">Exportar a Excel</button>
                 <button onclick="moverTodosAHistorico('supervisores')">Mover Todo a Histórico</button>
             </div>
-
+            
             <div class="tab-content" id="relevo-oficiales">
                 <h2>Relevo Oficiales</h2>
                 <table>
@@ -127,7 +126,6 @@
                     <tbody id="tabla-oficiales"></tbody>
                 </table>
                 <button onclick="agregarFila('oficiales')">Agregar Relevo</button>
-                <button onclick="exportarExcel('oficiales')">Exportar a Excel</button>
                 <button onclick="moverTodosAHistorico('oficiales')">Mover Todo a Histórico</button>
             </div>
         </div>
@@ -173,7 +171,7 @@
         }
 
         function renderizarTabla() {
-            // Similar lógica para actualizar ambas tablas
+            // Función para renderizar supervisores y oficiales con sus estilos de prioridad.
         }
 
         renderizarTabla();
