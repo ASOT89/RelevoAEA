@@ -160,6 +160,29 @@
             renderizarTabla();
         }
 
+        function actualizarDato(index, tipo, campo, valor) {
+            if (tipo === 'supervisores') {
+                supervisoresData[index][campo] = valor;
+                localStorage.setItem('supervisores', JSON.stringify(supervisoresData));
+            } else {
+                oficialesData[index][campo] = valor;
+                localStorage.setItem('oficiales', JSON.stringify(oficialesData));
+            }
+        }
+
+        function moverAHistorico(index, tipo) {
+            if (tipo === 'supervisores') {
+                historicoSupervisores.push(supervisoresData.splice(index, 1)[0]);
+                localStorage.setItem('supervisores', JSON.stringify(supervisoresData));
+                localStorage.setItem('historicoSupervisores', JSON.stringify(historicoSupervisores));
+            } else {
+                historicoOficiales.push(oficialesData.splice(index, 1)[0]);
+                localStorage.setItem('oficiales', JSON.stringify(oficialesData));
+                localStorage.setItem('historicoOficiales', JSON.stringify(historicoOficiales));
+            }
+            renderizarTabla();
+        }
+
         function renderizarTabla() {
             document.getElementById('tabla-supervisores').innerHTML = generarFilas(supervisoresData, 'supervisores');
             document.getElementById('tabla-oficiales').innerHTML = generarFilas(oficialesData, 'oficiales');
@@ -168,21 +191,37 @@
         function generarFilas(data, tipo) {
             return data.map((fila, index) => `
                 <tr class="prioridad-${fila.prioridad}">
-                    <td><input type="text" value="${fila.numeroPersonal}" /></td>
-                    <td><input type="date" value="${fila.fecha}" /></td>
-                    <td><input type="date" value="${fila.fechaFin}" /></td>
-                    <td contenteditable="true">${fila.asunto}</td>
+                    <td><input type="text" value="${fila.numeroPersonal}" onchange="actualizarDato(${index}, '${tipo}', 'numeroPersonal', this.value)" /></td>
+                    <td><input type="date" value="${fila.fecha}" onchange="actualizarDato(${index}, '${tipo}', 'fecha', this.value)" /></td>
+                    <td><input type="date" value="${fila.fechaFin}" onchange="actualizarDato(${index}, '${tipo}', 'fechaFin', this.value)" /></td>
+                    <td contenteditable="true" onblur="actualizarDato(${index}, '${tipo}', 'asunto', this.innerText)">${fila.asunto}</td>
                     <td>
-                        <select>
-                            <option value="baja">Baja</option>
-                            <option value="media">Media</option>
-                            <option value="alta">Alta</option>
+                        <select onchange="actualizarDato(${index}, '${tipo}', 'prioridad', this.value)" class="prioridad-${fila.prioridad}">
+                            <option value="baja" ${fila.prioridad === 'baja' ? 'selected' : ''}>Baja</option>
+                            <option value="media" ${fila.prioridad === 'media' ? 'selected' : ''}>Media</option>
+                            <option value="alta" ${fila.prioridad === 'alta' ? 'selected' : ''}>Alta</option>
                         </select>
                     </td>
-                    <td><input type="text" value="${fila.comentarios}" /></td>
-                    <td><input type="file" accept=".pdf" /></td>
+                    <td><input type="text" value="${fila.comentarios}" onchange="actualizarDato(${index}, '${tipo}', 'comentarios', this.value)" /></td>
+                    <td><input type="file" accept=".pdf" onchange="subirArchivo(event, ${index}, '${tipo}')" /></td>
                     <td><button onclick="moverAHistorico(${index}, '${tipo}')">Histórico</button></td>
                 </tr>`).join('');
+        }
+
+        function subirArchivo(event, index, tipo) {
+            let file = event.target.files[0];
+            if (file) {
+                let reader = new FileReader();
+                reader.onload = function(e) {
+                    if (tipo === 'supervisores') {
+                        supervisoresData[index].archivo = e.target.result;
+                    } else {
+                        oficialesData[index].archivo = e.target.result;
+                    }
+                    localStorage.setItem(tipo, JSON.stringify(tipo === 'supervisores' ? supervisoresData : oficialesData));
+                };
+                reader.readAsDataURL(file);
+            }
         }
 
         renderizarTabla();
