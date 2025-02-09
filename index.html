@@ -80,6 +80,7 @@
     <main>
         <div class="container">
             <h2>Relevo Supervisores</h2>
+            <button onclick="agregarFila('supervisores')">Agregar Relevo</button>
             <button onclick="mostrarHistorico('supervisores')">Mostrar Histórico</button>
             <table>
                 <thead>
@@ -96,10 +97,9 @@
                 </thead>
                 <tbody id="tabla-supervisores"></tbody>
             </table>
-            <button onclick="agregarFila('supervisores')">Agregar Relevo</button>
-            <button onclick="restaurarDesdeHistorico('supervisores')">Recibir Histórico</button>
             
             <h2>Relevo Oficiales</h2>
+            <button onclick="agregarFila('oficiales')">Agregar Relevo</button>
             <button onclick="mostrarHistorico('oficiales')">Mostrar Histórico</button>
             <table>
                 <thead>
@@ -116,8 +116,6 @@
                 </thead>
                 <tbody id="tabla-oficiales"></tbody>
             </table>
-            <button onclick="agregarFila('oficiales')">Agregar Relevo</button>
-            <button onclick="restaurarDesdeHistorico('oficiales')">Recibir Histórico</button>
         </div>
     </main>
 
@@ -154,21 +152,6 @@
                 localStorage.setItem('historicoSupervisores', JSON.stringify(historicoSupervisores));
             } else {
                 historicoOficiales.push(oficialesData.splice(index, 1)[0]);
-                localStorage.setItem('oficiales', JSON.stringify(oficialesData));
-                localStorage.setItem('historicoOficiales', JSON.stringify(historicoOficiales));
-            }
-            renderizarTabla();
-        }
-
-        function restaurarDesdeHistorico(tipo) {
-            if (tipo === 'supervisores' && historicoSupervisores.length > 0) {
-                supervisoresData.push(...historicoSupervisores);
-                historicoSupervisores = [];
-                localStorage.setItem('supervisores', JSON.stringify(supervisoresData));
-                localStorage.setItem('historicoSupervisores', JSON.stringify(historicoSupervisores));
-            } else if (tipo === 'oficiales' && historicoOficiales.length > 0) {
-                oficialesData.push(...historicoOficiales);
-                historicoOficiales = [];
                 localStorage.setItem('oficiales', JSON.stringify(oficialesData));
                 localStorage.setItem('historicoOficiales', JSON.stringify(historicoOficiales));
             }
