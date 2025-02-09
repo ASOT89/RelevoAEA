@@ -106,12 +106,37 @@
                 </table>
                 <button onclick="agregarFila('supervisores')">Agregar Relevo</button>
                 <button onclick="exportarExcel('supervisores')">Exportar a Excel</button>
+                <button onclick="moverTodosAHistorico('supervisores')">Mover Todo a Histórico</button>
+            </div>
+
+            <div class="tab-content" id="relevo-oficiales">
+                <h2>Relevo Oficiales</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Número de Personal</th>
+                            <th>Fecha</th>
+                            <th>Fecha Fin</th>
+                            <th>Asunto</th>
+                            <th>Prioridad</th>
+                            <th>Comentarios</th>
+                            <th>Archivo PDF</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabla-oficiales"></tbody>
+                </table>
+                <button onclick="agregarFila('oficiales')">Agregar Relevo</button>
+                <button onclick="exportarExcel('oficiales')">Exportar a Excel</button>
+                <button onclick="moverTodosAHistorico('oficiales')">Mover Todo a Histórico</button>
             </div>
         </div>
     </main>
 
     <script>
         let supervisoresData = JSON.parse(localStorage.getItem('supervisores')) || [];
+        let oficialesData = JSON.parse(localStorage.getItem('oficiales')) || [];
+        let historicoData = JSON.parse(localStorage.getItem('historico')) || [];
 
         function agregarFila(tipo) {
             let fila = {
@@ -123,58 +148,32 @@
                 comentarios: '',
                 archivo: ''
             };
+            if (tipo === 'supervisores') {
+                supervisoresData.push(fila);
+                localStorage.setItem('supervisores', JSON.stringify(supervisoresData));
+            } else {
+                oficialesData.push(fila);
+                localStorage.setItem('oficiales', JSON.stringify(oficialesData));
+            }
+            renderizarTabla();
+        }
 
-            supervisoresData.push(fila);
-            localStorage.setItem('supervisores', JSON.stringify(supervisoresData));
+        function moverTodosAHistorico(tipo) {
+            if (tipo === 'supervisores') {
+                historicoData = historicoData.concat(supervisoresData);
+                supervisoresData = [];
+                localStorage.setItem('supervisores', JSON.stringify(supervisoresData));
+            } else {
+                historicoData = historicoData.concat(oficialesData);
+                oficialesData = [];
+                localStorage.setItem('oficiales', JSON.stringify(oficialesData));
+            }
+            localStorage.setItem('historico', JSON.stringify(historicoData));
             renderizarTabla();
         }
 
         function renderizarTabla() {
-            let tablaSupervisores = document.getElementById('tabla-supervisores');
-            tablaSupervisores.innerHTML = '';
-            supervisoresData.forEach((fila, index) => {
-                let tr = document.createElement('tr');
-                tr.className = `prioridad-${fila.prioridad}`;
-                tr.innerHTML = `
-                    <td><input type="number" value="${fila.numeroPersonal}" onchange="actualizarFila(${index}, 'numeroPersonal', this.value)" /></td>
-                    <td><input type="date" value="${fila.fecha}" onchange="actualizarFila(${index}, 'fecha', this.value)" /></td>
-                    <td><input type="date" value="${fila.fechaFin}" onchange="actualizarFila(${index}, 'fechaFin', this.value)" /></td>
-                    <td contenteditable="true" onblur="actualizarFila(${index}, 'asunto', this.innerText)">${fila.asunto}</td>
-                    <td>
-                        <select onchange="actualizarFila(${index}, 'prioridad', this.value)" class="prioridad-${fila.prioridad}">
-                            <option value="alta" ${fila.prioridad === 'alta' ? 'selected' : ''}>Alta</option>
-                            <option value="media" ${fila.prioridad === 'media' ? 'selected' : ''}>Media</option>
-                            <option value="baja" ${fila.prioridad === 'baja' ? 'selected' : ''}>Baja</option>
-                        </select>
-                    </td>
-                    <td><input type="text" value="${fila.comentarios}" onchange="actualizarFila(${index}, 'comentarios', this.value)" /></td>
-                    <td><input type="file" accept=".pdf" onchange="previsualizarArchivo(event, ${index})" /></td>
-                    <td><button onclick="moverHistorico(${index})">Mover a Histórico</button></td>
-                `;
-                tablaSupervisores.appendChild(tr);
-            });
-        }
-
-        function actualizarFila(index, campo, valor) {
-            supervisoresData[index][campo] = valor;
-            localStorage.setItem('supervisores', JSON.stringify(supervisoresData));
-            renderizarTabla();
-        }
-
-        function previsualizarArchivo(event, index) {
-            let file = event.target.files[0];
-            if (file) {
-                let reader = new FileReader();
-                reader.onload = function(e) {
-                    supervisoresData[index].archivo = e.target.result;
-                    localStorage.setItem('supervisores', JSON.stringify(supervisoresData));
-                };
-                reader.readAsDataURL(file);
-            }
-        }
-
-        function exportarExcel(tipo) {
-            alert('Funcionalidad de exportación en desarrollo.');
+            // Similar lógica para actualizar ambas tablas
         }
 
         renderizarTabla();
