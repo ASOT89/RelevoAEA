@@ -96,7 +96,6 @@
                 <tbody id="tabla-supervisores"></tbody>
             </table>
             <button onclick="agregarFila('supervisores')">Agregar Relevo</button>
-            <button onclick="moverTodosAHistorico('supervisores')">Mover Todo a Histórico</button>
             
             <h2>Relevo Oficiales</h2>
             <table>
@@ -115,15 +114,12 @@
                 <tbody id="tabla-oficiales"></tbody>
             </table>
             <button onclick="agregarFila('oficiales')">Agregar Relevo</button>
-            <button onclick="moverTodosAHistorico('oficiales')">Mover Todo a Histórico</button>
         </div>
     </main>
 
     <script>
         let supervisoresData = JSON.parse(localStorage.getItem('supervisores')) || [];
         let oficialesData = JSON.parse(localStorage.getItem('oficiales')) || [];
-        let historicoSupervisores = JSON.parse(localStorage.getItem('historicoSupervisores')) || [];
-        let historicoOficiales = JSON.parse(localStorage.getItem('historicoOficiales')) || [];
 
         function agregarFila(tipo) {
             let fila = {
@@ -141,21 +137,6 @@
             } else {
                 oficialesData.push(fila);
                 localStorage.setItem('oficiales', JSON.stringify(oficialesData));
-            }
-            renderizarTabla();
-        }
-
-        function moverTodosAHistorico(tipo) {
-            if (tipo === 'supervisores') {
-                historicoSupervisores = historicoSupervisores.concat(supervisoresData);
-                supervisoresData = [];
-                localStorage.setItem('supervisores', JSON.stringify(supervisoresData));
-                localStorage.setItem('historicoSupervisores', JSON.stringify(historicoSupervisores));
-            } else {
-                historicoOficiales = historicoOficiales.concat(oficialesData);
-                oficialesData = [];
-                localStorage.setItem('oficiales', JSON.stringify(oficialesData));
-                localStorage.setItem('historicoOficiales', JSON.stringify(historicoOficiales));
             }
             renderizarTabla();
         }
@@ -180,7 +161,25 @@
                         </select>
                     </td>
                     <td><input type="text" value="${fila.comentarios}" /></td>
+                    <td><input type="file" accept=".pdf" onchange="actualizarArchivo(${index}, '${tipo}', this)" /></td>
+                    <td><button onclick="moverAHistorico(${index}, '${tipo}')">Histórico</button></td>
                 </tr>`).join('');
+        }
+
+        function actualizarArchivo(index, tipo, input) {
+            let file = input.files[0];
+            if (file) {
+                let reader = new FileReader();
+                reader.onload = function(e) {
+                    if (tipo === 'supervisores') {
+                        supervisoresData[index].archivo = e.target.result;
+                    } else {
+                        oficialesData[index].archivo = e.target.result;
+                    }
+                    localStorage.setItem(tipo, JSON.stringify(tipo === 'supervisores' ? supervisoresData : oficialesData));
+                };
+                reader.readAsDataURL(file);
+            }
         }
 
         renderizarTabla();
