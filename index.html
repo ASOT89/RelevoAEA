@@ -34,14 +34,6 @@
             text-align: center;
         }
 
-        .tab-content {
-            display: none;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
-
         table {
             width: 100%;
             border-collapse: collapse;
@@ -87,54 +79,51 @@
 
     <main>
         <div class="container">
-            <div class="tab-content active" id="relevo-supervisores">
-                <h2>Relevo Supervisores</h2>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Número de Personal</th>
-                            <th>Fecha</th>
-                            <th>Fecha Fin</th>
-                            <th>Asunto</th>
-                            <th>Prioridad</th>
-                            <th>Comentarios</th>
-                            <th>Archivo PDF</th>
-                            <th>Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tabla-supervisores"></tbody>
-                </table>
-                <button onclick="agregarFila('supervisores')">Agregar Relevo</button>
-                <button onclick="moverTodosAHistorico('supervisores')">Mover Todo a Histórico</button>
-            </div>
+            <h2>Relevo Supervisores</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Número de Personal</th>
+                        <th>Fecha</th>
+                        <th>Fecha Fin</th>
+                        <th>Asunto</th>
+                        <th>Prioridad</th>
+                        <th>Comentarios</th>
+                        <th>Archivo PDF</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="tabla-supervisores"></tbody>
+            </table>
+            <button onclick="agregarFila('supervisores')">Agregar Relevo</button>
+            <button onclick="moverTodosAHistorico('supervisores')">Mover Todo a Histórico</button>
             
-            <div class="tab-content" id="relevo-oficiales">
-                <h2>Relevo Oficiales</h2>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Número de Personal</th>
-                            <th>Fecha</th>
-                            <th>Fecha Fin</th>
-                            <th>Asunto</th>
-                            <th>Prioridad</th>
-                            <th>Comentarios</th>
-                            <th>Archivo PDF</th>
-                            <th>Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tabla-oficiales"></tbody>
-                </table>
-                <button onclick="agregarFila('oficiales')">Agregar Relevo</button>
-                <button onclick="moverTodosAHistorico('oficiales')">Mover Todo a Histórico</button>
-            </div>
+            <h2>Relevo Oficiales</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Número de Personal</th>
+                        <th>Fecha</th>
+                        <th>Fecha Fin</th>
+                        <th>Asunto</th>
+                        <th>Prioridad</th>
+                        <th>Comentarios</th>
+                        <th>Archivo PDF</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="tabla-oficiales"></tbody>
+            </table>
+            <button onclick="agregarFila('oficiales')">Agregar Relevo</button>
+            <button onclick="moverTodosAHistorico('oficiales')">Mover Todo a Histórico</button>
         </div>
     </main>
 
     <script>
         let supervisoresData = JSON.parse(localStorage.getItem('supervisores')) || [];
         let oficialesData = JSON.parse(localStorage.getItem('oficiales')) || [];
-        let historicoData = JSON.parse(localStorage.getItem('historico')) || [];
+        let historicoSupervisores = JSON.parse(localStorage.getItem('historicoSupervisores')) || [];
+        let historicoOficiales = JSON.parse(localStorage.getItem('historicoOficiales')) || [];
 
         function agregarFila(tipo) {
             let fila = {
@@ -158,20 +147,40 @@
 
         function moverTodosAHistorico(tipo) {
             if (tipo === 'supervisores') {
-                historicoData = historicoData.concat(supervisoresData);
+                historicoSupervisores = historicoSupervisores.concat(supervisoresData);
                 supervisoresData = [];
                 localStorage.setItem('supervisores', JSON.stringify(supervisoresData));
+                localStorage.setItem('historicoSupervisores', JSON.stringify(historicoSupervisores));
             } else {
-                historicoData = historicoData.concat(oficialesData);
+                historicoOficiales = historicoOficiales.concat(oficialesData);
                 oficialesData = [];
                 localStorage.setItem('oficiales', JSON.stringify(oficialesData));
+                localStorage.setItem('historicoOficiales', JSON.stringify(historicoOficiales));
             }
-            localStorage.setItem('historico', JSON.stringify(historicoData));
             renderizarTabla();
         }
 
         function renderizarTabla() {
-            // Función para renderizar supervisores y oficiales con sus estilos de prioridad.
+            document.getElementById('tabla-supervisores').innerHTML = generarFilas(supervisoresData, 'supervisores');
+            document.getElementById('tabla-oficiales').innerHTML = generarFilas(oficialesData, 'oficiales');
+        }
+
+        function generarFilas(data, tipo) {
+            return data.map((fila, index) => `
+                <tr class="prioridad-${fila.prioridad}">
+                    <td><input type="text" value="${fila.numeroPersonal}" onchange="actualizarFila(${index}, '${tipo}', 'numeroPersonal', this.value)" /></td>
+                    <td><input type="date" value="${fila.fecha}" onchange="actualizarFila(${index}, '${tipo}', 'fecha', this.value)" /></td>
+                    <td><input type="date" value="${fila.fechaFin}" onchange="actualizarFila(${index}, '${tipo}', 'fechaFin', this.value)" /></td>
+                    <td contenteditable="true" onblur="actualizarFila(${index}, '${tipo}', 'asunto', this.innerText)">${fila.asunto}</td>
+                    <td>
+                        <select onchange="actualizarFila(${index}, '${tipo}', 'prioridad', this.value)" class="prioridad-${fila.prioridad}">
+                            <option value="alta">Alta</option>
+                            <option value="media">Media</option>
+                            <option value="baja">Baja</option>
+                        </select>
+                    </td>
+                    <td><input type="text" value="${fila.comentarios}" /></td>
+                </tr>`).join('');
         }
 
         renderizarTabla();
