@@ -34,6 +34,15 @@
             text-align: center;
         }
 
+        .tables-container {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .table-wrapper {
+            width: 48%;
+        }
+
         table {
             width: 100%;
             border-collapse: collapse;
@@ -79,43 +88,49 @@
 
     <main>
         <div class="container">
-            <h2>Relevo Supervisores</h2>
-            <button onclick="agregarFila('supervisores')">Agregar Relevo</button>
-            <button onclick="mostrarHistorico('supervisores')">Mostrar Histórico</button>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Número de Personal</th>
-                        <th>Fecha</th>
-                        <th>Fecha Fin</th>
-                        <th>Asunto</th>
-                        <th>Prioridad</th>
-                        <th>Comentarios</th>
-                        <th>Archivo PDF</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody id="tabla-supervisores"></tbody>
-            </table>
-            
-            <h2>Relevo Oficiales</h2>
-            <button onclick="agregarFila('oficiales')">Agregar Relevo</button>
-            <button onclick="mostrarHistorico('oficiales')">Mostrar Histórico</button>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Número de Personal</th>
-                        <th>Fecha</th>
-                        <th>Fecha Fin</th>
-                        <th>Asunto</th>
-                        <th>Prioridad</th>
-                        <th>Comentarios</th>
-                        <th>Archivo PDF</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody id="tabla-oficiales"></tbody>
-            </table>
+            <div class="tables-container">
+                <div class="table-wrapper">
+                    <h2>Relevo Supervisores</h2>
+                    <button onclick="agregarFila('supervisores')">Agregar Relevo</button>
+                    <button onclick="mostrarHistorico('supervisores')">Mostrar Histórico</button>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Número de Personal</th>
+                                <th>Fecha</th>
+                                <th>Fecha Fin</th>
+                                <th>Asunto</th>
+                                <th>Prioridad</th>
+                                <th>Comentarios</th>
+                                <th>Archivo PDF</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabla-supervisores"></tbody>
+                    </table>
+                </div>
+                
+                <div class="table-wrapper">
+                    <h2>Relevo Oficiales</h2>
+                    <button onclick="agregarFila('oficiales')">Agregar Relevo</button>
+                    <button onclick="mostrarHistorico('oficiales')">Mostrar Histórico</button>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Número de Personal</th>
+                                <th>Fecha</th>
+                                <th>Fecha Fin</th>
+                                <th>Asunto</th>
+                                <th>Prioridad</th>
+                                <th>Comentarios</th>
+                                <th>Archivo PDF</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabla-oficiales"></tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </main>
 
@@ -145,30 +160,29 @@
             renderizarTabla();
         }
 
-        function moverAHistorico(index, tipo) {
-            if (tipo === 'supervisores') {
-                historicoSupervisores.push(supervisoresData.splice(index, 1)[0]);
-                localStorage.setItem('supervisores', JSON.stringify(supervisoresData));
-                localStorage.setItem('historicoSupervisores', JSON.stringify(historicoSupervisores));
-            } else {
-                historicoOficiales.push(oficialesData.splice(index, 1)[0]);
-                localStorage.setItem('oficiales', JSON.stringify(oficialesData));
-                localStorage.setItem('historicoOficiales', JSON.stringify(historicoOficiales));
-            }
-            renderizarTabla();
-        }
-
         function renderizarTabla() {
             document.getElementById('tabla-supervisores').innerHTML = generarFilas(supervisoresData, 'supervisores');
             document.getElementById('tabla-oficiales').innerHTML = generarFilas(oficialesData, 'oficiales');
         }
 
-        function mostrarHistorico(tipo) {
-            if (tipo === 'supervisores') {
-                console.log(historicoSupervisores);
-            } else {
-                console.log(historicoOficiales);
-            }
+        function generarFilas(data, tipo) {
+            return data.map((fila, index) => `
+                <tr class="prioridad-${fila.prioridad}">
+                    <td><input type="text" value="${fila.numeroPersonal}" /></td>
+                    <td><input type="date" value="${fila.fecha}" /></td>
+                    <td><input type="date" value="${fila.fechaFin}" /></td>
+                    <td contenteditable="true">${fila.asunto}</td>
+                    <td>
+                        <select>
+                            <option value="baja">Baja</option>
+                            <option value="media">Media</option>
+                            <option value="alta">Alta</option>
+                        </select>
+                    </td>
+                    <td><input type="text" value="${fila.comentarios}" /></td>
+                    <td><input type="file" accept=".pdf" /></td>
+                    <td><button onclick="moverAHistorico(${index}, '${tipo}')">Histórico</button></td>
+                </tr>`).join('');
         }
 
         renderizarTabla();
