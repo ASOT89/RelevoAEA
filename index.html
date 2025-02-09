@@ -208,13 +208,13 @@
             const data = tipo === 'supervisores' ? supervisoresData : oficialesData;
 
             document.getElementById(tabla).innerHTML = data.map((fila, index) => `
-                <tr>
+                <tr class="prioridad-${fila.prioridad}">
                     <td><input type="text" value="${fila.numeroPersonal}" onchange="actualizarDato(${index}, '${tipo}', 'numeroPersonal', this.value)" /></td>
                     <td><input type="date" value="${fila.fecha}" onchange="actualizarDato(${index}, '${tipo}', 'fecha', this.value)" /></td>
                     <td><input type="date" value="${fila.fechaFin}" onchange="actualizarDato(${index}, '${tipo}', 'fechaFin', this.value)" /></td>
                     <td contenteditable="true" onblur="actualizarDato(${index}, '${tipo}', 'asunto', this.innerText)">${fila.asunto}</td>
                     <td>
-                        <select onchange="actualizarPrioridad(${index}, '${tipo}', this.value)" class="prioridad-${fila.prioridad}">
+                        <select onchange="actualizarPrioridad(${index}, '${tipo}', this.value)">
                             <option value="baja" ${fila.prioridad === 'baja' ? 'selected' : ''}>Baja</option>
                             <option value="media" ${fila.prioridad === 'media' ? 'selected' : ''}>Media</option>
                             <option value="alta" ${fila.prioridad === 'alta' ? 'selected' : ''}>Alta</option>
