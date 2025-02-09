@@ -34,13 +34,35 @@
             text-align: center;
         }
 
-        .tables-container {
+        .tabs {
             display: flex;
-            justify-content: space-between;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #ddd;
+            justify-content: center;
         }
 
-        .table-wrapper {
-            width: 48%;
+        .tab {
+            flex: 1;
+            text-align: center;
+            padding: 10px;
+            cursor: pointer;
+            background-color: #f1f1f1;
+            border: 1px solid #ddd;
+            border-bottom: none;
+        }
+
+        .tab.active {
+            background-color: #fff;
+            font-weight: bold;
+            border-bottom: 2px solid white;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
         }
 
         table {
@@ -77,11 +99,18 @@
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            margin-left: 5px;
+            margin: 10px auto;
+            display: block;
+            font-size: 16px;
         }
 
         button:hover {
             background-color: #e65c00;
+        }
+
+        button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
         }
     </style>
 </head>
@@ -92,56 +121,69 @@
 
     <main>
         <div class="container">
-            <div class="tables-container">
-                <div class="table-wrapper">
-                    <h2>Relevo Supervisores</h2>
-                    <button onclick="agregarFila('supervisores')">Agregar Relevo</button>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Número de Personal</th>
-                                <th>Fecha</th>
-                                <th>Fecha Fin</th>
-                                <th>Asunto</th>
-                                <th>Prioridad</th>
-                                <th>Comentarios</th>
-                                <th>Archivo PDF</th>
-                                <th>Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tabla-supervisores"></tbody>
-                    </table>
-                </div>
+            <div class="tabs">
+                <div class="tab active" onclick="showTab('relevo-supervisores')">Relevo Supervisores</div>
+                <div class="tab" onclick="showTab('relevo-oficiales')">Relevo Oficiales</div>
+            </div>
 
-                <div class="table-wrapper">
-                    <h2>Relevo Oficiales</h2>
-                    <button onclick="agregarFila('oficiales')">Agregar Relevo</button>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Número de Personal</th>
-                                <th>Fecha</th>
-                                <th>Fecha Fin</th>
-                                <th>Asunto</th>
-                                <th>Prioridad</th>
-                                <th>Comentarios</th>
-                                <th>Archivo PDF</th>
-                                <th>Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tabla-oficiales"></tbody>
-                    </table>
-                </div>
+            <div id="relevo-supervisores" class="tab-content active">
+                <h2>Relevo Supervisores</h2>
+                <button onclick="agregarFila('supervisores')">Agregar Relevo</button>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Número de Personal</th>
+                            <th>Fecha</th>
+                            <th>Fecha Fin</th>
+                            <th>Asunto</th>
+                            <th>Prioridad</th>
+                            <th>Comentarios</th>
+                            <th>Archivo PDF</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabla-supervisores"></tbody>
+                </table>
+            </div>
+
+            <div id="relevo-oficiales" class="tab-content">
+                <h2>Relevo Oficiales</h2>
+                <button onclick="agregarFila('oficiales')">Agregar Relevo</button>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Número de Personal</th>
+                            <th>Fecha</th>
+                            <th>Fecha Fin</th>
+                            <th>Asunto</th>
+                            <th>Prioridad</th>
+                            <th>Comentarios</th>
+                            <th>Archivo PDF</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabla-oficiales"></tbody>
+                </table>
             </div>
         </div>
     </main>
 
     <script>
-        // Datos iniciales separados
+        // Variables
         let supervisoresData = [];
         let oficialesData = [];
 
-        // Función para agregar una fila
+        function showTab(tabId) {
+            const tabs = document.querySelectorAll('.tab');
+            const tabContents = document.querySelectorAll('.tab-content');
+
+            tabs.forEach(tab => tab.classList.remove('active'));
+            tabContents.forEach(content => content.classList.remove('active'));
+
+            document.getElementById(tabId).classList.add('active');
+            event.target.classList.add('active');
+        }
+
         function agregarFila(tipo) {
             const fila = {
                 numeroPersonal: '',
@@ -161,7 +203,6 @@
             renderizarTabla(tipo);
         }
 
-        // Función para renderizar la tabla
         function renderizarTabla(tipo) {
             const tabla = tipo === 'supervisores' ? 'tabla-supervisores' : 'tabla-oficiales';
             const data = tipo === 'supervisores' ? supervisoresData : oficialesData;
@@ -185,17 +226,14 @@
                 </tr>`).join('');
         }
 
-        // Función para actualizar los datos de una fila
         function actualizarDato(index, tipo, campo, valor) {
             if (tipo === 'supervisores') {
                 supervisoresData[index][campo] = valor;
             } else {
                 oficialesData[index][campo] = valor;
             }
-            renderizarTabla(tipo);
         }
 
-        // Función para eliminar una fila
         function eliminarFila(index, tipo) {
             if (tipo === 'supervisores') {
                 supervisoresData.splice(index, 1);
@@ -205,7 +243,6 @@
             renderizarTabla(tipo);
         }
 
-        // Función para subir archivo
         function subirArchivo(event, index, tipo) {
             const file = event.target.files[0];
             if (file) {
@@ -220,6 +257,7 @@
                 reader.readAsDataURL(file);
             }
         }
+
     </script>
 </body>
 </html>
