@@ -208,13 +208,13 @@
             const data = tipo === 'supervisores' ? supervisoresData : oficialesData;
 
             document.getElementById(tabla).innerHTML = data.map((fila, index) => `
-                <tr class="prioridad-${fila.prioridad}">
+                <tr>
                     <td><input type="text" value="${fila.numeroPersonal}" onchange="actualizarDato(${index}, '${tipo}', 'numeroPersonal', this.value)" /></td>
                     <td><input type="date" value="${fila.fecha}" onchange="actualizarDato(${index}, '${tipo}', 'fecha', this.value)" /></td>
                     <td><input type="date" value="${fila.fechaFin}" onchange="actualizarDato(${index}, '${tipo}', 'fechaFin', this.value)" /></td>
                     <td contenteditable="true" onblur="actualizarDato(${index}, '${tipo}', 'asunto', this.innerText)">${fila.asunto}</td>
                     <td>
-                        <select onchange="actualizarDato(${index}, '${tipo}', 'prioridad', this.value)" class="prioridad-${fila.prioridad}">
+                        <select onchange="actualizarPrioridad(${index}, '${tipo}', this.value)" class="prioridad-${fila.prioridad}">
                             <option value="baja" ${fila.prioridad === 'baja' ? 'selected' : ''}>Baja</option>
                             <option value="media" ${fila.prioridad === 'media' ? 'selected' : ''}>Media</option>
                             <option value="alta" ${fila.prioridad === 'alta' ? 'selected' : ''}>Alta</option>
@@ -232,6 +232,15 @@
             } else {
                 oficialesData[index][campo] = valor;
             }
+        }
+
+        function actualizarPrioridad(index, tipo, valor) {
+            if (tipo === 'supervisores') {
+                supervisoresData[index].prioridad = valor;
+            } else {
+                oficialesData[index].prioridad = valor;
+            }
+            renderizarTabla(tipo);
         }
 
         function eliminarFila(index, tipo) {
