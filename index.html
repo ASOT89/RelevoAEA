@@ -97,6 +97,7 @@
                 <tbody id="tabla-supervisores"></tbody>
             </table>
             <button onclick="agregarFila('supervisores')">Agregar Relevo</button>
+            <button onclick="restaurarDesdeHistorico('supervisores')">Recibir Histórico</button>
             
             <h2>Relevo Oficiales</h2>
             <button onclick="mostrarHistorico('oficiales')">Mostrar Histórico</button>
@@ -116,6 +117,7 @@
                 <tbody id="tabla-oficiales"></tbody>
             </table>
             <button onclick="agregarFila('oficiales')">Agregar Relevo</button>
+            <button onclick="restaurarDesdeHistorico('oficiales')">Recibir Histórico</button>
         </div>
     </main>
 
@@ -145,11 +147,6 @@
             renderizarTabla();
         }
 
-        function renderizarTabla() {
-            document.getElementById('tabla-supervisores').innerHTML = generarFilas(supervisoresData, 'supervisores');
-            document.getElementById('tabla-oficiales').innerHTML = generarFilas(oficialesData, 'oficiales');
-        }
-
         function moverAHistorico(index, tipo) {
             if (tipo === 'supervisores') {
                 historicoSupervisores.push(supervisoresData.splice(index, 1)[0]);
@@ -161,6 +158,26 @@
                 localStorage.setItem('historicoOficiales', JSON.stringify(historicoOficiales));
             }
             renderizarTabla();
+        }
+
+        function restaurarDesdeHistorico(tipo) {
+            if (tipo === 'supervisores' && historicoSupervisores.length > 0) {
+                supervisoresData.push(...historicoSupervisores);
+                historicoSupervisores = [];
+                localStorage.setItem('supervisores', JSON.stringify(supervisoresData));
+                localStorage.setItem('historicoSupervisores', JSON.stringify(historicoSupervisores));
+            } else if (tipo === 'oficiales' && historicoOficiales.length > 0) {
+                oficialesData.push(...historicoOficiales);
+                historicoOficiales = [];
+                localStorage.setItem('oficiales', JSON.stringify(oficialesData));
+                localStorage.setItem('historicoOficiales', JSON.stringify(historicoOficiales));
+            }
+            renderizarTabla();
+        }
+
+        function renderizarTabla() {
+            document.getElementById('tabla-supervisores').innerHTML = generarFilas(supervisoresData, 'supervisores');
+            document.getElementById('tabla-oficiales').innerHTML = generarFilas(oficialesData, 'oficiales');
         }
 
         function mostrarHistorico(tipo) {
