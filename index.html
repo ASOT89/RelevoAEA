@@ -135,11 +135,13 @@
     </main>
 
     <script>
+        // Datos iniciales
         let supervisoresData = JSON.parse(localStorage.getItem('supervisores')) || [];
         let oficialesData = JSON.parse(localStorage.getItem('oficiales')) || [];
         let historicoSupervisores = JSON.parse(localStorage.getItem('historicoSupervisores')) || [];
         let historicoOficiales = JSON.parse(localStorage.getItem('historicoOficiales')) || [];
 
+        // Validar datos iniciales
         function limpiarDatosIniciales() {
             if (!Array.isArray(supervisoresData)) supervisoresData = [];
             if (!Array.isArray(oficialesData)) oficialesData = [];
@@ -151,6 +153,7 @@
             localStorage.setItem('historicoOficiales', JSON.stringify(historicoOficiales));
         }
 
+        // Agregar una fila nueva
         function agregarFila(tipo) {
             const fila = {
                 numeroPersonal: '',
@@ -172,6 +175,7 @@
             renderizarTabla();
         }
 
+        // Actualizar datos de una fila
         function actualizarDato(index, tipo, campo, valor) {
             if (tipo === 'supervisores') {
                 supervisoresData[index][campo] = valor;
@@ -182,6 +186,7 @@
             }
         }
 
+        // Mover fila al histórico
         function moverAHistorico(index, tipo) {
             if (tipo === 'supervisores') {
                 historicoSupervisores.push(supervisoresData.splice(index, 1)[0]);
@@ -195,11 +200,13 @@
             renderizarTabla();
         }
 
+        // Renderizar tabla
         function renderizarTabla() {
             document.getElementById('tabla-supervisores').innerHTML = generarFilas(supervisoresData, 'supervisores');
             document.getElementById('tabla-oficiales').innerHTML = generarFilas(oficialesData, 'oficiales');
         }
 
+        // Generar filas de la tabla
         function generarFilas(data, tipo) {
             return data.map((fila, index) => `
                 <tr class="prioridad-${fila.prioridad}">
@@ -220,6 +227,7 @@
                 </tr>`).join('');
         }
 
+        // Subir archivo PDF
         function subirArchivo(event, index, tipo) {
             let file = event.target.files[0];
             if (file) {
