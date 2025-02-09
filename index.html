@@ -165,6 +165,7 @@
             const tablaId = tipo === 'supervisores' ? 'tabla-supervisores' : 'tabla-oficiales';
             const tbody = document.getElementById(tablaId);
             const tr = document.createElement('tr');
+            tr.classList.add('prioridad-baja'); // Aplicar clase por defecto
             tr.innerHTML = `
                 <td><input type="text" /></td>
                 <td><input type="date" /></td>
@@ -172,7 +173,7 @@
                 <td><input type="text" /></td>
                 <td>
                     <select onchange="cambiarColorFila(this)">
-                        <option value="baja">Baja</option>
+                        <option value="baja" selected>Baja</option>
                         <option value="media">Media</option>
                         <option value="alta">Alta</option>
                     </select>
