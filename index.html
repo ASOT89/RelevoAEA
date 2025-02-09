@@ -77,6 +77,18 @@
             border: 1px solid #ddd;
         }
 
+        td input[type="text"], td textarea {
+            width: 90%;
+            padding: 8px;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+
+        td textarea {
+            resize: none;
+            height: 80px;
+        }
+
         .prioridad-baja {
             background-color: green !important;
             color: white;
@@ -220,7 +232,7 @@
                             <option value="alta" ${fila.prioridad === 'alta' ? 'selected' : ''}>Alta</option>
                         </select>
                     </td>
-                    <td><input type="text" value="${fila.comentarios}" onchange="actualizarDato(${index}, '${tipo}', 'comentarios', this.value)" /></td>
+                    <td><textarea onchange="actualizarDato(${index}, '${tipo}', 'comentarios', this.value)">${fila.comentarios}</textarea></td>
                     <td><input type="file" accept=".pdf" onchange="subirArchivo(event, ${index}, '${tipo}')" /></td>
                     <td><button onclick="eliminarFila(${index}, '${tipo}')">Eliminar</button></td>
                 </tr>`).join('');
