@@ -90,9 +90,19 @@
             width: 98%;
         }
 
+        th:nth-child(4),
+        td:nth-child(4) {
+            width: 35%;
+        }
+
         th:nth-child(6),
         td:nth-child(6) {
-            width: 30%;
+            width: 25%;
+        }
+
+        th:nth-child(7),
+        td:nth-child(7) {
+            width: 10%;
         }
 
         .prioridad-baja {
@@ -230,7 +240,7 @@
                     <td><input type="text" value="${fila.numeroPersonal}" onchange="actualizarDato(${index}, '${tipo}', 'numeroPersonal', this.value)" /></td>
                     <td><input type="date" value="${fila.fecha}" onchange="actualizarDato(${index}, '${tipo}', 'fecha', this.value)" /></td>
                     <td><input type="date" value="${fila.fechaFin}" onchange="actualizarDato(${index}, '${tipo}', 'fechaFin', this.value)" /></td>
-                    <td contenteditable="true" onblur="actualizarDato(${index}, '${tipo}', 'asunto', this.innerText)">${fila.asunto}</td>
+                    <td contenteditable="true" onblur="actualizarDato(${index}, '${tipo}', 'asunto', this.innerText)" style="width: 95%;">${fila.asunto}</td>
                     <td>
                         <select onchange="actualizarPrioridad(${index}, '${tipo}', this.value)">
                             <option value="baja" ${fila.prioridad === 'baja' ? 'selected' : ''}>Baja</option>
@@ -239,7 +249,7 @@
                         </select>
                     </td>
                     <td><textarea onchange="actualizarDato(${index}, '${tipo}', 'comentarios', this.value)">${fila.comentarios}</textarea></td>
-                    <td><input type="file" accept=".pdf" onchange="subirArchivo(event, ${index}, '${tipo}')" /></td>
+                    <td><input type="file" accept=".pdf" onchange="subirArchivo(event, ${index}, '${tipo}')" style="width: 90%;" /></td>
                     <td><button onclick="eliminarFila(${index}, '${tipo}')">Eliminar</button></td>
                 </tr>`).join('');
         }
