@@ -140,8 +140,19 @@
         let historicoSupervisores = JSON.parse(localStorage.getItem('historicoSupervisores')) || [];
         let historicoOficiales = JSON.parse(localStorage.getItem('historicoOficiales')) || [];
 
+        function limpiarDatosIniciales() {
+            if (!Array.isArray(supervisoresData)) supervisoresData = [];
+            if (!Array.isArray(oficialesData)) oficialesData = [];
+            if (!Array.isArray(historicoSupervisores)) historicoSupervisores = [];
+            if (!Array.isArray(historicoOficiales)) historicoOficiales = [];
+            localStorage.setItem('supervisores', JSON.stringify(supervisoresData));
+            localStorage.setItem('oficiales', JSON.stringify(oficialesData));
+            localStorage.setItem('historicoSupervisores', JSON.stringify(historicoSupervisores));
+            localStorage.setItem('historicoOficiales', JSON.stringify(historicoOficiales));
+        }
+
         function agregarFila(tipo) {
-            let fila = {
+            const fila = {
                 numeroPersonal: '',
                 fecha: '',
                 fechaFin: '',
@@ -150,6 +161,7 @@
                 comentarios: '',
                 archivo: ''
             };
+
             if (tipo === 'supervisores') {
                 supervisoresData.push(fila);
                 localStorage.setItem('supervisores', JSON.stringify(supervisoresData));
@@ -224,6 +236,7 @@
             }
         }
 
+        limpiarDatosIniciales();
         renderizarTabla();
     </script>
 </body>
