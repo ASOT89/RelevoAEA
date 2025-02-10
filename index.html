@@ -92,6 +92,14 @@
             font-weight: bold;
         }
 
+        th:nth-child(4), td:nth-child(4) {
+            width: 25%;
+        }
+
+        th:nth-child(6), td:nth-child(6) {
+            width: 40%;
+        }
+
         td input, td textarea, td select {
             width: 90%;
             padding: 8px;
@@ -136,55 +144,15 @@
             background-color: #e65c00;
         }
     </style>
-    <script>
-        function showTab(tabId) {
-            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
-            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
-            document.getElementById(tabId).classList.add('active');
-            event.target.classList.add('active');
-        }
-
-        function agregarFila(tipo) {
-            const tablaId = tipo === 'supervisores' ? 'tabla-supervisores' : 'tabla-oficiales';
-            const tbody = document.getElementById(tablaId);
-            const tr = document.createElement('tr');
-            tr.classList.add('prioridad-baja');
-            tr.innerHTML = `
-                <td><input type="text" /></td>
-                <td><input type="date" /></td>
-                <td><input type="date" /></td>
-                <td><input type="text" /></td>
-                <td>
-                    <select onchange="cambiarColorFila(this)">
-                        <option value="baja" selected>Baja</option>
-                        <option value="media">Media</option>
-                        <option value="alta">Alta</option>
-                    </select>
-                </td>
-                <td><textarea></textarea></td>
-                <td><input type="file" accept=".pdf" /></td>
-                <td><button onclick="this.parentElement.parentElement.remove()">Eliminar</button></td>
-            `;
-            tbody.appendChild(tr);
-        }
-
-        function cambiarColorFila(selectElement) {
-            const fila = selectElement.parentElement.parentElement;
-            fila.classList.remove("prioridad-baja", "prioridad-media", "prioridad-alta");
-            fila.classList.add("prioridad-" + selectElement.value);
-        }
-    </script>
 </head>
 <body>
     <header>Relevo AEA Stores</header>
-
     <main>
         <div class="container">
             <div class="tabs">
                 <div class="tab active" onclick="showTab('relevo-supervisores')">Relevo Supervisores</div>
                 <div class="tab" onclick="showTab('relevo-oficiales')">Relevo Oficiales</div>
             </div>
-
             <div id="relevo-supervisores" class="tab-content active">
                 <h2>Relevo Supervisores</h2>
                 <button onclick="agregarFila('supervisores')">Agregar Relevo</button>
@@ -204,7 +172,6 @@
                     <tbody id="tabla-supervisores"></tbody>
                 </table>
             </div>
-
             <div id="relevo-oficiales" class="tab-content">
                 <h2>Relevo Oficiales</h2>
                 <button onclick="agregarFila('oficiales')">Agregar Relevo</button>
