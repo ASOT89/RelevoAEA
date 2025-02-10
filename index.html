@@ -79,12 +79,12 @@
 
         th:nth-child(4),
         td:nth-child(4) {
-            width: 30%;
+            width: 25%;
         }
 
         th:nth-child(6),
         td:nth-child(6) {
-            width: 35%;
+            width: 40%;
         }
 
         .prioridad-baja {
@@ -132,6 +132,36 @@
             document.getElementById(tabId).classList.add('active');
             event.target.classList.add('active');
         }
+
+        function agregarFila(tipo) {
+            const tablaId = tipo === 'supervisores' ? 'tabla-supervisores' : 'tabla-oficiales';
+            const tbody = document.getElementById(tablaId);
+            const tr = document.createElement('tr');
+            tr.classList.add('prioridad-baja');
+            tr.innerHTML = `
+                <td><input type="text" /></td>
+                <td><input type="date" /></td>
+                <td><input type="date" /></td>
+                <td><input type="text" /></td>
+                <td>
+                    <select onchange="cambiarColorFila(this)">
+                        <option value="baja" selected>Baja</option>
+                        <option value="media">Media</option>
+                        <option value="alta">Alta</option>
+                    </select>
+                </td>
+                <td><textarea></textarea></td>
+                <td><input type="file" accept=".pdf" /></td>
+                <td><button onclick="this.parentElement.parentElement.remove()">Eliminar</button></td>
+            `;
+            tbody.appendChild(tr);
+        }
+
+        function cambiarColorFila(selectElement) {
+            const fila = selectElement.parentElement.parentElement;
+            fila.classList.remove("prioridad-baja", "prioridad-media", "prioridad-alta");
+            fila.classList.add("prioridad-" + selectElement.value);
+        }
     </script>
 </head>
 <body>
@@ -150,12 +180,42 @@
                 <h2>Relevo Supervisores</h2>
                 <button onclick="agregarFila('supervisores')">Agregar Relevo</button>
                 <button onclick="verHistorico('supervisores')">Histórico</button>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Número de Personal</th>
+                            <th>Fecha</th>
+                            <th>Fecha Fin</th>
+                            <th>Asunto</th>
+                            <th>Prioridad</th>
+                            <th>Comentarios</th>
+                            <th>Archivo PDF</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabla-supervisores"></tbody>
+                </table>
             </div>
 
             <div id="relevo-oficiales" class="tab-content">
                 <h2>Relevo Oficiales</h2>
                 <button onclick="agregarFila('oficiales')">Agregar Relevo</button>
                 <button onclick="verHistorico('oficiales')">Histórico</button>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Número de Personal</th>
+                            <th>Fecha</th>
+                            <th>Fecha Fin</th>
+                            <th>Asunto</th>
+                            <th>Prioridad</th>
+                            <th>Comentarios</th>
+                            <th>Archivo PDF</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabla-oficiales"></tbody>
+                </table>
             </div>
         </div>
     </main>
