@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -13,56 +13,48 @@
 
         body {
             font-family: 'Arial', sans-serif;
-            background: url('https://gacetadelturismo.com/wp-content/uploads/sites/8/2024/05/Campana-UX-scaled-e1716268258593.jpg') no-repeat center center fixed;
-            background-size: cover;
+            background-color: #ADD8E6;
             color: #333;
         }
 
         header {
-            background-color: #002a4e;
+            background-color: #003e6e;
             padding: 20px;
             text-align: center;
             color: white;
-            font-size: 24px;
-            font-weight: bold;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
         }
 
         .container {
-            width: 95%;
-            max-width: 1600px;
-            margin: 40px auto;
-            background-color: rgba(255, 255, 255, 0.9);
-            padding: 25px;
-            border-radius: 8px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 1900px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
         }
 
         .tabs {
             display: flex;
-            justify-content: center;
             margin-bottom: 20px;
+            border-bottom: 2px solid #ddd;
+            justify-content: center;
         }
 
         .tab {
             flex: 1;
             text-align: center;
-            padding: 15px;
+            padding: 10px;
             cursor: pointer;
-            background-color: #eceff1;
-            border-radius: 5px 5px 0 0;
-            font-size: 18px;
-            font-weight: bold;
-            transition: background 0.3s;
-        }
-
-        .tab:hover {
-            background-color: #d1d9e0;
+            background-color: #f1f1f1;
+            border: 1px solid #ddd;
+            border-bottom: none;
         }
 
         .tab.active {
-            background-color: #ffffff;
-            border-bottom: 3px solid #002a4e;
+            background-color: #fff;
+            font-weight: bold;
+            border-bottom: 2px solid white;
         }
 
         .tab-content {
@@ -73,129 +65,69 @@
             display: block;
         }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-            border-radius: 5px;
-            overflow: hidden;
-        }
-
-        th, td {
-            padding: 15px;
-            text-align: center;
-            border: 1px solid #ddd;
-        }
-
-        th {
-            background-color: #002a4e;
-            color: white;
-            font-weight: bold;
-        }
-
-        th:nth-child(4), td:nth-child(4) {
-            width: 25%;
-        }
-
-        th:nth-child(6), td:nth-child(6) {
-            width: 40%;
-        }
-
-        td input, td textarea, td select {
-            width: 90%;
-            padding: 8px;
-            font-size: 14px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-
-        td textarea {
-            resize: none;
-            height: 100px;
-        }
-
-        .prioridad-baja {
-            background-color: #8bc34a !important;
-            color: white;
-        }
-
-        .prioridad-media {
-            background-color: #ffeb3b !important;
-            color: black;
-        }
-
-        .prioridad-alta {
-            background-color: #f44336 !important;
-            color: white;
+        .button-container {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 15px;
         }
 
         button {
             background-color: #ff6c00;
             color: white;
-            padding: 12px;
+            padding: 10px;
             border: none;
             border-radius: 5px;
             cursor: pointer;
             font-size: 16px;
-            font-weight: bold;
-            transition: background 0.3s;
         }
 
         button:hover {
             background-color: #e65c00;
         }
+
+        button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
     </style>
     <script>
         function showTab(tabId) {
-            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
-            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            const tabs = document.querySelectorAll('.tab');
+            const tabContents = document.querySelectorAll('.tab-content');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            tabContents.forEach(content => content.classList.remove('active'));
             document.getElementById(tabId).classList.add('active');
-        }
-
-        function agregarFila(tipo) {
-            const tablaId = tipo === 'supervisores' ? 'tabla-supervisores' : 'tabla-oficiales';
-            const tbody = document.getElementById(tablaId);
-            const tr = document.createElement('tr');
-            tr.classList.add('prioridad-baja');
-            tr.innerHTML = `
-                <td><input type="text" /></td>
-                <td><input type="date" /></td>
-                <td><input type="date" /></td>
-                <td><input type="text" /></td>
-                <td>
-                    <select onchange="cambiarColorFila(this)">
-                        <option value="baja" selected>Baja</option>
-                        <option value="media">Media</option>
-                        <option value="alta">Alta</option>
-                    </select>
-                </td>
-                <td><textarea></textarea></td>
-                <td><input type="file" accept=".pdf" /></td>
-                <td><button onclick="this.parentElement.parentElement.remove()">Eliminar</button></td>
-            `;
-            tbody.appendChild(tr);
-        }
-
-        function cambiarColorFila(selectElement) {
-            const fila = selectElement.parentElement.parentElement;
-            fila.classList.remove("prioridad-baja", "prioridad-media", "prioridad-alta");
-            fila.classList.add("prioridad-" + selectElement.value);
+            event.target.classList.add('active');
         }
     </script>
 </head>
 <body>
-    <header>Relevo AEA Stores</header>
+    <header>
+        <h1>Relevo AEA Stores</h1>
+    </header>
+
     <main>
         <div class="container">
             <div class="tabs">
                 <div class="tab active" onclick="showTab('relevo-supervisores')">Relevo Supervisores</div>
                 <div class="tab" onclick="showTab('relevo-oficiales')">Relevo Oficiales</div>
             </div>
+
             <div id="relevo-supervisores" class="tab-content active">
-                 <button onclick="alert('Histórico de relevos supervisores')">Histórico</button>
-                <table>
-                    <tbody id="tabla-supervisores"></tbody>
-                </table>
+                <h2>Relevo Supervisores</h2>
+                <div class="button-container">
+                    <button onclick="agregarFila('supervisores')">Agregar Relevo</button>
+                    <button onclick="verHistorico('supervisores')">Histórico</button>
+                </div>
+            </div>
+
+            <div id="relevo-oficiales" class="tab-content">
+                <h2>Relevo Oficiales</h2>
+                <div class="button-container">
+                    <button onclick="agregarFila('oficiales')">Agregar Relevo</button>
+                    <button onclick="verHistorico('oficiales')">Histórico</button>
+                </div>
             </div>
         </div>
     </main>
