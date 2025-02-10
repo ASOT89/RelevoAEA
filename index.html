@@ -1,4 +1,4 @@
-<<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -65,11 +65,29 @@
             display: block;
         }
 
-        .button-container {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin-bottom: 15px;
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+
+        td input[type="text"], td textarea {
+            width: 90%;
+            padding: 8px;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+
+        td textarea {
+            resize: none;
+            height: 120px;
+            width: 100%;
         }
 
         button {
@@ -79,6 +97,8 @@
             border: none;
             border-radius: 5px;
             cursor: pointer;
+            margin: 10px auto;
+            display: inline-block;
             font-size: 16px;
         }
 
@@ -116,18 +136,44 @@
 
             <div id="relevo-supervisores" class="tab-content active">
                 <h2>Relevo Supervisores</h2>
-                <div class="button-container">
-                    <button onclick="agregarFila('supervisores')">Agregar Relevo</button>
-                    <button onclick="verHistorico('supervisores')">Histórico</button>
-                </div>
+                <button onclick="agregarFila('supervisores')">Agregar Relevo</button>
+                <button onclick="verHistorico('supervisores')">Histórico</button>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Número de Personal</th>
+                            <th>Fecha</th>
+                            <th>Fecha Fin</th>
+                            <th>Asunto</th>
+                            <th>Prioridad</th>
+                            <th>Comentarios</th>
+                            <th>Archivo PDF</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabla-supervisores"></tbody>
+                </table>
             </div>
 
             <div id="relevo-oficiales" class="tab-content">
                 <h2>Relevo Oficiales</h2>
-                <div class="button-container">
-                    <button onclick="agregarFila('oficiales')">Agregar Relevo</button>
-                    <button onclick="verHistorico('oficiales')">Histórico</button>
-                </div>
+                <button onclick="agregarFila('oficiales')">Agregar Relevo</button>
+                <button onclick="verHistorico('oficiales')">Histórico</button>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Número de Personal</th>
+                            <th>Fecha</th>
+                            <th>Fecha Fin</th>
+                            <th>Asunto</th>
+                            <th>Prioridad</th>
+                            <th>Comentarios</th>
+                            <th>Archivo PDF</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabla-oficiales"></tbody>
+                </table>
             </div>
         </div>
     </main>
