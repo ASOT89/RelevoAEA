@@ -166,7 +166,7 @@
             const tbody = document.getElementById(tablaId);
             const tr = document.createElement('tr');
             tr.classList.add('prioridad-baja'); // Aplicar clase por defecto
-            tr.innerHTML = 
+            tr.innerHTML = `
                 <td><input type="text" /></td>
                 <td><input type="date" /></td>
                 <td><input type="date" /></td>
@@ -181,7 +181,7 @@
                 <td><textarea></textarea></td>
                 <td><input type="file" accept=".pdf" /></td>
                 <td><button onclick="this.parentElement.parentElement.remove()">Eliminar</button></td>
-            ;
+            `;
             tbody.appendChild(tr);
         }
 
