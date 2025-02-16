@@ -90,10 +90,6 @@
             min-width: 100px;
         }
 
-        th:nth-child(7), td:nth-child(7) {
-            width: 10%;
-        }
-
         .prioridad-baja { background-color: green !important; color: white; }
         .prioridad-media { background-color: yellow !important; color: black; }
         .prioridad-alta { background-color: red !important; color: white; }
@@ -145,7 +141,9 @@
                     </select>
                 </td>
                 <td><textarea oninput="ajustarAltura(this)"></textarea></td>
-                <td><input type="file" accept=".pdf" /></td>
+                <td>
+                    <input type="file" accept=".pdf" multiple onchange="validarArchivos(this)" />
+                </td>
                 <td><button onclick="confirmarEliminar(this)">Eliminar</button></td>
             `;
             tbody.appendChild(tr);
@@ -167,6 +165,13 @@
         function confirmarEliminar(button) {
             if (confirm("¿Está seguro de que desea eliminar este relevo?")) {
                 button.parentElement.parentElement.remove();
+            }
+        }
+
+        function validarArchivos(input) {
+            if (input.files.length > 3) {
+                alert("Solo puedes subir un máximo de 3 archivos PDF.");
+                input.value = "";
             }
         }
     </script>
@@ -200,26 +205,6 @@
                         </tr>
                     </thead>
                     <tbody id="tabla-supervisores"></tbody>
-                </table>
-            </div>
-
-            <div id="relevo-oficiales" class="tab-content">
-                <h2>Relevo Oficiales</h2>
-                <button onclick="agregarFila('oficiales')">Agregar Relevo</button>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Número de Personal</th>
-                            <th>Fecha</th>
-                            <th>Fecha Fin</th>
-                            <th>Asunto</th>
-                            <th>Prioridad</th>
-                            <th>Comentarios</th>
-                            <th>Archivo PDF</th>
-                            <th>Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tabla-oficiales"></tbody>
                 </table>
             </div>
         </div>
