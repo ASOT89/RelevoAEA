@@ -157,13 +157,6 @@
             `;
             tbody.appendChild(tr);
         }
-
-        function cambiarColorFila(selectElement) {
-            const fila = selectElement.closest('tr');
-            fila.classList.remove("prioridad-baja", "prioridad-media", "prioridad-alta");
-            const prioridad = selectElement.value;
-            fila.classList.add("prioridad-" + prioridad);
-        }
     </script>
 </head>
 <body>
