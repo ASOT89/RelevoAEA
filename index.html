@@ -77,22 +77,50 @@
             border: 1px solid #ddd;
         }
 
-        th {
-            cursor: pointer;
-            background-color: #003e6e;
-            color: white;
-        }
-
-        td input, td textarea, td select {
+        td input[type="text"], td textarea {
             width: 100%;
             padding: 8px;
             font-size: 14px;
             box-sizing: border-box;
         }
 
+        td textarea {
+            resize: both;
+            min-height: 40px;
+            min-width: 100px;
+        }
+
         .prioridad-baja { background-color: green !important; color: white; }
         .prioridad-media { background-color: yellow !important; color: black; }
         .prioridad-alta { background-color: red !important; color: white; }
+
+        button {
+            background-color: #ff6c00;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px auto;
+            display: block;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #e65c00;
+        }
+
+        button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        .file-input-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+        }
     </style>
     <script>
         function showTab(tabId) {
@@ -106,11 +134,12 @@
             const tablaId = tipo === 'supervisores' ? 'tabla-supervisores' : 'tabla-oficiales';
             const tbody = document.getElementById(tablaId);
             const tr = document.createElement('tr');
+            tr.classList.add('prioridad-baja');
             tr.innerHTML = `
                 <td><input type="text" placeholder="Número de Personal" /></td>
                 <td><input type="date" /></td>
                 <td><input type="date" /></td>
-                <td><textarea placeholder="Asunto"></textarea></td>
+                <td><textarea placeholder="Asunto" oninput="ajustarAltura(this)"></textarea></td>
                 <td>
                     <select onchange="cambiarColorFila(this)">
                         <option value="baja" selected>Baja</option>
@@ -118,8 +147,12 @@
                         <option value="alta">Alta</option>
                     </select>
                 </td>
-                <td><textarea placeholder="Comentarios"></textarea></td>
-                <td><input type="file" accept=".pdf" multiple /></td>
+                <td><textarea placeholder="Comentarios" oninput="ajustarAltura(this)"></textarea></td>
+                <td class="file-input-container">
+                    <input type="file" accept=".pdf" />
+                    <input type="file" accept=".pdf" />
+                    <input type="file" accept=".pdf" />
+                </td>
                 <td><button onclick="confirmarEliminar(this)">Eliminar</button></td>
             `;
             tbody.appendChild(tr);
@@ -136,54 +169,55 @@
                 button.closest('tr').remove();
             }
         }
-
-        function sortTable(tableId, columnIndex, isDate = false) {
-            const table = document.getElementById(tableId);
-            const tbody = table.querySelector("tbody");
-            const rows = Array.from(tbody.rows);
-            const isAscending = table.dataset.sortOrder !== 'asc';
-            
-            rows.sort((rowA, rowB) => {
-                let cellA = rowA.cells[columnIndex].querySelector('input, select')?.value || rowA.cells[columnIndex].textContent.trim();
-                let cellB = rowB.cells[columnIndex].querySelector('input, select')?.value || rowB.cells[columnIndex].textContent.trim();
-                
-                if (isDate) {
-                    return isAscending ? new Date(cellA) - new Date(cellB) : new Date(cellB) - new Date(cellA);
-                }
-                return isAscending ? cellA.localeCompare(cellB) : cellB.localeCompare(cellA);
-            });
-            
-            tbody.append(...rows);
-            table.dataset.sortOrder = isAscending ? 'asc' : 'desc';
-        }
     </script>
 </head>
 <body>
     <header>
         <h1>Relevo AEA Stores</h1>
     </header>
+
     <main>
         <div class="container">
             <div class="tabs">
                 <div class="tab active" onclick="showTab('relevo-supervisores')">Relevo Supervisores</div>
                 <div class="tab" onclick="showTab('relevo-oficiales')">Relevo Oficiales</div>
             </div>
+            
             <div id="relevo-supervisores" class="tab-content active">
                 <button onclick="agregarFila('supervisores')">Agregar Relevo</button>
-                <table id="tabla-supervisores">
+                <table>
                     <thead>
                         <tr>
-                            <th onclick="sortTable('tabla-supervisores', 0)">Número de Personal</th>
-                            <th onclick="sortTable('tabla-supervisores', 1, true)">Fecha</th>
-                            <th onclick="sortTable('tabla-supervisores', 2, true)">Fecha Fin</th>
+                            <th>Número de Personal</th>
+                            <th>Fecha</th>
+                            <th>Fecha Fin</th>
                             <th>Asunto</th>
-                            <th onclick="sortTable('tabla-supervisores', 4)">Prioridad</th>
+                            <th>Prioridad</th>
                             <th>Comentarios</th>
                             <th>Archivo PDF</th>
                             <th>Acciones</th>
                         </tr>
                     </thead>
-                    <tbody></tbody>
+                    <tbody id="tabla-supervisores"></tbody>
+                </table>
+            </div>
+            
+            <div id="relevo-oficiales" class="tab-content">
+                <button onclick="agregarFila('oficiales')">Agregar Relevo</button>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Número de Personal</th>
+                            <th>Fecha</th>
+                            <th>Fecha Fin</th>
+                            <th>Asunto</th>
+                            <th>Prioridad</th>
+                            <th>Comentarios</th>
+                            <th>Archivo PDF</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabla-oficiales"></tbody>
                 </table>
             </div>
         </div>
