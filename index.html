@@ -114,6 +114,13 @@
             background-color: #ccc;
             cursor: not-allowed;
         }
+
+        .file-input-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+        }
     </style>
     <script>
         function showTab(tabId) {
@@ -141,7 +148,7 @@
                     </select>
                 </td>
                 <td><textarea oninput="ajustarAltura(this)"></textarea></td>
-                <td>
+                <td class="file-input-container">
                     <input type="file" accept=".pdf" />
                     <input type="file" accept=".pdf" />
                     <input type="file" accept=".pdf" />
