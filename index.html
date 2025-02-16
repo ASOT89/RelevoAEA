@@ -77,29 +77,6 @@
             border: 1px solid #ddd;
         }
 
-        th:nth-child(1),
-        td:nth-child(1),
-        th:nth-child(2),
-        td:nth-child(2),
-        th:nth-child(3),
-        td:nth-child(3),
-        th:nth-child(5),
-        td:nth-child(5),
-        th:nth-child(7),
-        td:nth-child(7) {
-            width: 8%;
-        }
-
-        th:nth-child(4),
-        td:nth-child(4) {
-            width: 25%;
-        }
-
-        th:nth-child(6),
-        td:nth-child(6) {
-            width: 40%;
-        }
-
         td input[type="text"], td textarea {
             width: 90%;
             padding: 8px;
@@ -108,25 +85,14 @@
         }
 
         td textarea {
-            resize: none;
-            height: 120px;
-            width: 100%;
+            resize: vertical;
+            height: auto;
+            min-height: 40px;
         }
 
-        .prioridad-baja {
-            background-color: green !important;
-            color: white;
-        }
-
-        .prioridad-media {
-            background-color: yellow !important;
-            color: black;
-        }
-
-        .prioridad-alta {
-            background-color: red !important;
-            color: white;
-        }
+        .prioridad-baja { background-color: green !important; color: white; }
+        .prioridad-media { background-color: yellow !important; color: black; }
+        .prioridad-alta { background-color: red !important; color: white; }
 
         button {
             background-color: #ff6c00;
@@ -151,12 +117,8 @@
     </style>
     <script>
         function showTab(tabId) {
-            const tabs = document.querySelectorAll('.tab');
-            const tabContents = document.querySelectorAll('.tab-content');
-
-            tabs.forEach(tab => tab.classList.remove('active'));
-            tabContents.forEach(content => content.classList.remove('active'));
-
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
             document.getElementById(tabId).classList.add('active');
             event.target.classList.add('active');
         }
@@ -165,12 +127,12 @@
             const tablaId = tipo === 'supervisores' ? 'tabla-supervisores' : 'tabla-oficiales';
             const tbody = document.getElementById(tablaId);
             const tr = document.createElement('tr');
-            tr.classList.add('prioridad-baja'); // Aplicar clase por defecto
+            tr.classList.add('prioridad-baja');
             tr.innerHTML = `
                 <td><input type="text" /></td>
                 <td><input type="date" /></td>
                 <td><input type="date" /></td>
-                <td></td> <!-- Asunto: campo libre -->
+                <td><textarea oninput="ajustarAltura(this)"></textarea></td>
                 <td>
                     <select onchange="cambiarColorFila(this)">
                         <option value="baja" selected>Baja</option>
@@ -178,8 +140,8 @@
                         <option value="alta">Alta</option>
                     </select>
                 </td>
-                <td></td> <!-- Comentarios: campo libre -->
-                <td><input type="file" accept=".pdf" /></td> <!-- Archivo PDF -->
+                <td><textarea oninput="ajustarAltura(this)"></textarea></td>
+                <td><input type="file" accept=".pdf" /></td>
                 <td><button onclick="this.parentElement.parentElement.remove()">Eliminar</button></td>
             `;
             tbody.appendChild(tr);
@@ -189,6 +151,11 @@
             const fila = selectElement.parentElement.parentElement;
             fila.classList.remove("prioridad-baja", "prioridad-media", "prioridad-alta");
             fila.classList.add("prioridad-" + selectElement.value);
+        }
+
+        function ajustarAltura(elemento) {
+            elemento.style.height = "auto";
+            elemento.style.height = (elemento.scrollHeight) + "px";
         }
     </script>
 </head>
