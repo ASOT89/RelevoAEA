@@ -142,7 +142,9 @@
                 </td>
                 <td><textarea oninput="ajustarAltura(this)"></textarea></td>
                 <td>
-                    <input type="file" accept=".pdf" multiple onchange="validarArchivos(this)" />
+                    <input type="file" accept=".pdf" />
+                    <input type="file" accept=".pdf" />
+                    <input type="file" accept=".pdf" />
                 </td>
                 <td><button onclick="confirmarEliminar(this)">Eliminar</button></td>
             `;
@@ -158,20 +160,11 @@
         function ajustarAltura(elemento) {
             elemento.style.height = "auto";
             elemento.style.height = (elemento.scrollHeight) + "px";
-            elemento.style.width = "auto";
-            elemento.style.width = (elemento.scrollWidth) + "px";
         }
 
         function confirmarEliminar(button) {
             if (confirm("¿Está seguro de que desea eliminar este relevo?")) {
                 button.parentElement.parentElement.remove();
-            }
-        }
-
-        function validarArchivos(input) {
-            if (input.files.length > 3) {
-                alert("Solo puedes subir un máximo de 3 archivos PDF.");
-                input.value = "";
             }
         }
     </script>
