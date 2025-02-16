@@ -136,43 +136,20 @@
             const tr = document.createElement('tr');
             tr.classList.add('prioridad-baja');
             tr.innerHTML = `
-                <td><input type="text" /></td>
-                <td><input type="date" /></td>
-                <td><input type="date" /></td>
-                <td><textarea oninput="ajustarAltura(this)"></textarea></td>
-                <td>
-                    <select onchange="cambiarColorFila(this)">
-                        <option value="baja" selected>Baja</option>
-                        <option value="media">Media</option>
-                        <option value="alta">Alta</option>
-                    </select>
-                </td>
-                <td><textarea oninput="ajustarAltura(this)"></textarea></td>
+                <td>Número de Personal</td>
+                <td>Fecha</td>
+                <td>Fecha Fin</td>
+                <td>Asunto</td>
+                <td>Prioridad</td>
+                <td>Comentarios</td>
                 <td class="file-input-container">
                     <input type="file" accept=".pdf" />
                     <input type="file" accept=".pdf" />
                     <input type="file" accept=".pdf" />
                 </td>
-                <td><button onclick="confirmarEliminar(this)">Eliminar</button></td>
+                <td>Acciones</td>
             `;
             tbody.appendChild(tr);
-        }
-
-        function cambiarColorFila(selectElement) {
-            const fila = selectElement.parentElement.parentElement;
-            fila.classList.remove("prioridad-baja", "prioridad-media", "prioridad-alta");
-            fila.classList.add("prioridad-" + selectElement.value);
-        }
-
-        function ajustarAltura(elemento) {
-            elemento.style.height = "auto";
-            elemento.style.height = (elemento.scrollHeight) + "px";
-        }
-
-        function confirmarEliminar(button) {
-            if (confirm("¿Está seguro de que desea eliminar este relevo?")) {
-                button.parentElement.parentElement.remove();
-            }
         }
     </script>
 </head>
@@ -191,6 +168,18 @@
             <div id="relevo-supervisores" class="tab-content active">
                 <button onclick="agregarFila('supervisores')">Agregar Relevo</button>
                 <table>
+                    <thead>
+                        <tr>
+                            <th>Número de Personal</th>
+                            <th>Fecha</th>
+                            <th>Fecha Fin</th>
+                            <th>Asunto</th>
+                            <th>Prioridad</th>
+                            <th>Comentarios</th>
+                            <th>Archivo PDF</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
                     <tbody id="tabla-supervisores"></tbody>
                 </table>
             </div>
@@ -198,6 +187,18 @@
             <div id="relevo-oficiales" class="tab-content">
                 <button onclick="agregarFila('oficiales')">Agregar Relevo</button>
                 <table>
+                    <thead>
+                        <tr>
+                            <th>Número de Personal</th>
+                            <th>Fecha</th>
+                            <th>Fecha Fin</th>
+                            <th>Asunto</th>
+                            <th>Prioridad</th>
+                            <th>Comentarios</th>
+                            <th>Archivo PDF</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
                     <tbody id="tabla-oficiales"></tbody>
                 </table>
             </div>
