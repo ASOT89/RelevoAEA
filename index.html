@@ -77,6 +77,19 @@
             border: 1px solid #ddd;
         }
 
+        th:nth-child(1),
+        td:nth-child(1),
+        th:nth-child(2),
+        td:nth-child(2),
+        th:nth-child(3),
+        td:nth-child(3),
+        th:nth-child(5),
+        td:nth-child(5),
+        th:nth-child(7),
+        td:nth-child(7) {
+            width: 8%;
+        }
+
         th:nth-child(4),
         td:nth-child(4) {
             width: 25%;
@@ -85,6 +98,19 @@
         th:nth-child(6),
         td:nth-child(6) {
             width: 40%;
+        }
+
+        td input[type="text"], td textarea {
+            width: 90%;
+            padding: 8px;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+
+        td textarea {
+            resize: none;
+            height: 120px;
+            width: 100%;
         }
 
         .prioridad-baja {
@@ -110,7 +136,7 @@
             border-radius: 5px;
             cursor: pointer;
             margin: 10px auto;
-            display: inline-block;
+            display: block;
             font-size: 16px;
         }
 
@@ -127,8 +153,10 @@
         function showTab(tabId) {
             const tabs = document.querySelectorAll('.tab');
             const tabContents = document.querySelectorAll('.tab-content');
+
             tabs.forEach(tab => tab.classList.remove('active'));
             tabContents.forEach(content => content.classList.remove('active'));
+
             document.getElementById(tabId).classList.add('active');
             event.target.classList.add('active');
         }
@@ -137,7 +165,7 @@
             const tablaId = tipo === 'supervisores' ? 'tabla-supervisores' : 'tabla-oficiales';
             const tbody = document.getElementById(tablaId);
             const tr = document.createElement('tr');
-            tr.classList.add('prioridad-baja');
+            tr.classList.add('prioridad-baja'); // Aplicar clase por defecto
             tr.innerHTML = `
                 <td><input type="text" /></td>
                 <td><input type="date" /></td>
@@ -151,7 +179,7 @@
                     </select>
                 </td>
                 <td><textarea></textarea></td>
-                <td><input type="file" accept=".pdf" /></td>
+                <td border="none"><input type="file" accept=".pdf" /></td>
                 <td><button onclick="this.parentElement.parentElement.remove()">Eliminar</button></td>
             `;
             tbody.appendChild(tr);
@@ -179,7 +207,6 @@
             <div id="relevo-supervisores" class="tab-content active">
                 <h2>Relevo Supervisores</h2>
                 <button onclick="agregarFila('supervisores')">Agregar Relevo</button>
-                <button onclick="verHistorico('supervisores')">Histórico</button>
                 <table>
                     <thead>
                         <tr>
@@ -200,7 +227,6 @@
             <div id="relevo-oficiales" class="tab-content">
                 <h2>Relevo Oficiales</h2>
                 <button onclick="agregarFila('oficiales')">Agregar Relevo</button>
-                <button onclick="verHistorico('oficiales')">Histórico</button>
                 <table>
                     <thead>
                         <tr>
