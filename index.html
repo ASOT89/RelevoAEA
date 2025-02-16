@@ -158,6 +158,12 @@
             tbody.appendChild(tr);
         }
 
+        function cambiarColorFila(selectElement) {
+            const fila = selectElement.closest('tr');
+            fila.classList.remove("prioridad-baja", "prioridad-media", "prioridad-alta");
+            fila.classList.add("prioridad-" + selectElement.value);
+        }
+
         function confirmarEliminar(button) {
             if (confirm("¿Está seguro de que desea eliminar esta fila?")) {
                 button.closest('tr').remove();
