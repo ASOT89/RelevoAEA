@@ -148,38 +148,6 @@
             background-color: #ccc;
             cursor: not-allowed;
         }
-
-        /* Nueva sección de estilos con las correcciones */
-        .table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 20px;
-        }
-
-        th, td {
-            padding: 12px;
-            text-align: center;
-            border: 1px solid #ddd;
-        }
-
-        /* Estilos específicos para las columnas de "Asunto", "Comentarios" y "Archivo PDF" */
-        th:nth-child(4) { /* Asunto */
-            width: 25%; /* Aumentar el ancho del campo Asunto */
-            border-bottom: none;
-            padding-right: auto;
-        }
-
-        th:nth-child(6) { /* Comentarios */
-            width: 40%; /* Aumentar el ancho del campo Comentarios */
-            border-bottom: none;
-            padding-right: auto;
-        }
-
-        th:nth-child(7) { /* Archivo PDF */
-            width: 8%; /* Aumentar el ancho del campo Archivo PDF */
-            border-bottom: none;
-            padding-right: auto;
-        }
     </style>
     <script>
         function showTab(tabId) {
@@ -202,7 +170,7 @@
                 <td><input type="text" /></td>
                 <td><input type="date" /></td>
                 <td><input type="date" /></td>
-                <td><input type="text" /></td>
+                <td><input type="text" /></td> <!-- Asunto -->
                 <td>
                     <select onchange="cambiarColorFila(this)">
                         <option value="baja" selected>Baja</option>
@@ -210,8 +178,8 @@
                         <option value="alta">Alta</option>
                     </select>
                 </td>
-                <td><textarea></textarea></td>
-                <td><input type="file" accept=".pdf" /></td>
+                <td><textarea></textarea></td> <!-- Comentarios -->
+                <td><input type="file" accept=".pdf" /></td> <!-- Archivo PDF -->
                 <td><button onclick="this.parentElement.parentElement.remove()">Eliminar</button></td>
             `;
             tbody.appendChild(tr);
