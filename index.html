@@ -157,6 +157,12 @@
             `;
             tbody.appendChild(tr);
         }
+
+        function confirmarEliminar(button) {
+            if (confirm("¿Está seguro de que desea eliminar esta fila?")) {
+                button.closest('tr').remove();
+            }
+        }
     </script>
 </head>
 <body>
