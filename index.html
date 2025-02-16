@@ -146,7 +146,7 @@
                 </td>
                 <td><textarea oninput="ajustarAltura(this)"></textarea></td>
                 <td><input type="file" accept=".pdf" /></td>
-                <td><button onclick="this.parentElement.parentElement.remove()">Eliminar</button></td>
+                <td><button onclick="confirmarEliminar(this)">Eliminar</button></td>
             `;
             tbody.appendChild(tr);
         }
@@ -162,6 +162,12 @@
             elemento.style.height = (elemento.scrollHeight) + "px";
             elemento.style.width = "auto";
             elemento.style.width = (elemento.scrollWidth) + "px";
+        }
+
+        function confirmarEliminar(button) {
+            if (confirm("¿Está seguro de que desea eliminar este relevo?")) {
+                button.parentElement.parentElement.remove();
+            }
         }
     </script>
 </head>
