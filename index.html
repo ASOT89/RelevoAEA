@@ -78,16 +78,20 @@
         }
 
         td input[type="text"], td textarea {
-            width: 90%;
+            width: 100%;
             padding: 8px;
             font-size: 14px;
             box-sizing: border-box;
         }
 
         td textarea {
-            resize: vertical;
-            height: auto;
+            resize: both;
             min-height: 40px;
+            min-width: 100px;
+        }
+
+        th:nth-child(7), td:nth-child(7) {
+            width: 10%;
         }
 
         .prioridad-baja { background-color: green !important; color: white; }
@@ -156,6 +160,8 @@
         function ajustarAltura(elemento) {
             elemento.style.height = "auto";
             elemento.style.height = (elemento.scrollHeight) + "px";
+            elemento.style.width = "auto";
+            elemento.style.width = (elemento.scrollWidth) + "px";
         }
     </script>
 </head>
@@ -170,7 +176,7 @@
                 <div class="tab active" onclick="showTab('relevo-supervisores')">Relevo Supervisores</div>
                 <div class="tab" onclick="showTab('relevo-oficiales')">Relevo Oficiales</div>
             </div>
-
+            
             <div id="relevo-supervisores" class="tab-content active">
                 <h2>Relevo Supervisores</h2>
                 <button onclick="agregarFila('supervisores')">Agregar Relevo</button>
@@ -188,26 +194,6 @@
                         </tr>
                     </thead>
                     <tbody id="tabla-supervisores"></tbody>
-                </table>
-            </div>
-
-            <div id="relevo-oficiales" class="tab-content">
-                <h2>Relevo Oficiales</h2>
-                <button onclick="agregarFila('oficiales')">Agregar Relevo</button>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Número de Personal</th>
-                            <th>Fecha</th>
-                            <th>Fecha Fin</th>
-                            <th>Asunto</th>
-                            <th>Prioridad</th>
-                            <th>Comentarios</th>
-                            <th>Archivo PDF</th>
-                            <th>Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tabla-oficiales"></tbody>
                 </table>
             </div>
         </div>
