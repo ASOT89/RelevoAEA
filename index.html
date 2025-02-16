@@ -83,43 +83,16 @@
             color: white;
         }
 
-        td input[type="text"], td textarea {
+        td input, td textarea, td select {
             width: 100%;
             padding: 8px;
             font-size: 14px;
             box-sizing: border-box;
         }
 
-        td textarea {
-            resize: both;
-            min-height: 40px;
-            min-width: 100px;
-        }
-
         .prioridad-baja { background-color: green !important; color: white; }
         .prioridad-media { background-color: yellow !important; color: black; }
         .prioridad-alta { background-color: red !important; color: white; }
-
-        button {
-            background-color: #ff6c00;
-            color: white;
-            padding: 10px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            margin: 10px auto;
-            display: block;
-            font-size: 16px;
-        }
-
-        button:hover {
-            background-color: #e65c00;
-        }
-
-        button:disabled {
-            background-color: #ccc;
-            cursor: not-allowed;
-        }
     </style>
     <script>
         function showTab(tabId) {
@@ -133,7 +106,6 @@
             const tablaId = tipo === 'supervisores' ? 'tabla-supervisores' : 'tabla-oficiales';
             const tbody = document.getElementById(tablaId);
             const tr = document.createElement('tr');
-            tr.classList.add('prioridad-baja');
             tr.innerHTML = `
                 <td><input type="text" placeholder="Número de Personal" /></td>
                 <td><input type="date" /></td>
@@ -165,17 +137,20 @@
             }
         }
 
-        function sortTable(tableId, columnIndex) {
+        function sortTable(tableId, columnIndex, isDate = false) {
             const table = document.getElementById(tableId);
             const tbody = table.querySelector("tbody");
             const rows = Array.from(tbody.rows);
             const isAscending = table.dataset.sortOrder !== 'asc';
             
             rows.sort((rowA, rowB) => {
-                const cellA = rowA.cells[columnIndex].textContent.trim();
-                const cellB = rowB.cells[columnIndex].textContent.trim();
+                let cellA = rowA.cells[columnIndex].querySelector('input, select')?.value || rowA.cells[columnIndex].textContent.trim();
+                let cellB = rowB.cells[columnIndex].querySelector('input, select')?.value || rowB.cells[columnIndex].textContent.trim();
                 
-                return isAscending ? cellA.localeCompare(cellB, undefined, { numeric: true }) : cellB.localeCompare(cellA, undefined, { numeric: true });
+                if (isDate) {
+                    return isAscending ? new Date(cellA) - new Date(cellB) : new Date(cellB) - new Date(cellA);
+                }
+                return isAscending ? cellA.localeCompare(cellB) : cellB.localeCompare(cellA);
             });
             
             tbody.append(...rows);
@@ -195,14 +170,14 @@
             </div>
             <div id="relevo-supervisores" class="tab-content active">
                 <button onclick="agregarFila('supervisores')">Agregar Relevo</button>
-                <table id="tabla-supervisores" onclick="sortTable('tabla-supervisores', event.target.cellIndex)">
+                <table id="tabla-supervisores">
                     <thead>
                         <tr>
-                            <th>Número de Personal</th>
-                            <th>Fecha</th>
-                            <th>Fecha Fin</th>
+                            <th onclick="sortTable('tabla-supervisores', 0)">Número de Personal</th>
+                            <th onclick="sortTable('tabla-supervisores', 1, true)">Fecha</th>
+                            <th onclick="sortTable('tabla-supervisores', 2, true)">Fecha Fin</th>
                             <th>Asunto</th>
-                            <th>Prioridad</th>
+                            <th onclick="sortTable('tabla-supervisores', 4)">Prioridad</th>
                             <th>Comentarios</th>
                             <th>Archivo PDF</th>
                             <th>Acciones</th>
