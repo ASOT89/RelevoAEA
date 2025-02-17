@@ -139,7 +139,7 @@
                 <td><input type="text" placeholder="Número de Personal" /></td>
                 <td><input type="date" /></td>
                 <td><input type="date" /></td>
-                <td><textarea placeholder="Asunto" oninput="ajustarAltura(this)"></textarea></td>
+                <td><textarea placeholder="Asunto"></textarea></td>
                 <td>
                     <select onchange="cambiarColorFila(this)">
                         <option value="baja" selected>Baja</option>
@@ -147,7 +147,7 @@
                         <option value="alta">Alta</option>
                     </select>
                 </td>
-                <td><textarea placeholder="Comentarios" oninput="ajustarAltura(this)"></textarea></td>
+                <td><textarea placeholder="Comentarios"></textarea></td>
                 <td class="file-input-container">
                     <input type="file" accept=".pdf" />
                     <input type="file" accept=".pdf" />
@@ -169,58 +169,25 @@
                 button.closest('tr').remove();
             }
         }
+
+        function ordenarPorPrioridad(tablaId) {
+            const tbody = document.getElementById(tablaId);
+            const filas = Array.from(tbody.children);
+            
+            filas.sort((a, b) => {
+                const prioridadA = a.querySelector("select").value;
+                const prioridadB = b.querySelector("select").value;
+                const prioridades = { "alta": 1, "media": 2, "baja": 3 };
+                return prioridades[prioridadA] - prioridades[prioridadB];
+            });
+            
+            filas.forEach(fila => tbody.appendChild(fila));
+        }
     </script>
 </head>
 <body>
     <header>
         <h1>Relevo AEA Stores</h1>
     </header>
-
-    <main>
-        <div class="container">
-            <div class="tabs">
-                <div class="tab active" onclick="showTab('relevo-supervisores')">Relevo Supervisores</div>
-                <div class="tab" onclick="showTab('relevo-oficiales')">Relevo Oficiales</div>
-            </div>
-            
-            <div id="relevo-supervisores" class="tab-content active">
-                <button onclick="agregarFila('supervisores')">Agregar Relevo</button>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Número de Personal</th>
-                            <th>Fecha</th>
-                            <th>Fecha Fin</th>
-                            <th>Asunto</th>
-                            <th>Prioridad</th>
-                            <th>Comentarios</th>
-                            <th>Archivo PDF</th>
-                            <th>Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tabla-supervisores"></tbody>
-                </table>
-            </div>
-            
-            <div id="relevo-oficiales" class="tab-content">
-                <button onclick="agregarFila('oficiales')">Agregar Relevo</button>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Número de Personal</th>
-                            <th>Fecha</th>
-                            <th>Fecha Fin</th>
-                            <th>Asunto</th>
-                            <th>Prioridad</th>
-                            <th>Comentarios</th>
-                            <th>Archivo PDF</th>
-                            <th>Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tabla-oficiales"></tbody>
-                </table>
-            </div>
-        </div>
-    </main>
 </body>
 </html>
