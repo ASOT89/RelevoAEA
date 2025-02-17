@@ -189,5 +189,17 @@
     <header>
         <h1>Relevo AEA Stores</h1>
     </header>
+    <main>
+        <div class="container">
+            <div class="tabs">
+                <div class="tab active" onclick="showTab('relevo-supervisores')">Relevo Supervisores</div>
+                <div class="tab" onclick="showTab('relevo-oficiales')">Relevo Oficiales</div>
+            </div>
+            <div id="relevo-supervisores" class="tab-content active">
+                <button onclick="ordenarPorPrioridad('tabla-supervisores')">Ordenar por Prioridad</button>
+                <table><tbody id="tabla-supervisores"></tbody></table>
+            </div>
+        </div>
+    </main>
 </body>
 </html>
