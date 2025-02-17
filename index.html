@@ -114,13 +114,6 @@
             background-color: #ccc;
             cursor: not-allowed;
         }
-
-        .file-input-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 5px;
-        }
     </style>
     <script>
         function showTab(tabId) {
@@ -130,58 +123,18 @@
             event.target.classList.add('active');
         }
 
-        function agregarFila(tipo) {
-            const tablaId = tipo === 'supervisores' ? 'tabla-supervisores' : 'tabla-oficiales';
-            const tbody = document.getElementById(tablaId);
-            const tr = document.createElement('tr');
-            tr.classList.add('prioridad-baja');
-            tr.innerHTML = `
-                <td><input type="text" placeholder="Número de Personal" /></td>
-                <td><input type="date" /></td>
-                <td><input type="date" /></td>
-                <td><textarea placeholder="Asunto"></textarea></td>
-                <td>
-                    <select onchange="cambiarColorFila(this)">
-                        <option value="baja" selected>Baja</option>
-                        <option value="media">Media</option>
-                        <option value="alta">Alta</option>
-                    </select>
-                </td>
-                <td><textarea placeholder="Comentarios"></textarea></td>
-                <td class="file-input-container">
-                    <input type="file" accept=".pdf" />
-                    <input type="file" accept=".pdf" />
-                    <input type="file" accept=".pdf" />
-                </td>
-                <td><button onclick="confirmarEliminar(this)">Eliminar</button></td>
-            `;
-            tbody.appendChild(tr);
-        }
-
-        function cambiarColorFila(selectElement) {
-            const fila = selectElement.closest('tr');
-            fila.classList.remove("prioridad-baja", "prioridad-media", "prioridad-alta");
-            fila.classList.add("prioridad-" + selectElement.value);
-        }
-
-        function confirmarEliminar(button) {
-            if (confirm("¿Está seguro de que desea eliminar esta fila?")) {
-                button.closest('tr').remove();
-            }
-        }
-
-        function ordenarPorPrioridad(tablaId) {
-            const tbody = document.getElementById(tablaId);
-            const filas = Array.from(tbody.children);
+        function filtrarTabla(tablaId, filtroId) {
+            const tabla = document.getElementById(tablaId);
+            const filtroPrioridad = document.getElementById(filtroId).value;
             
-            filas.sort((a, b) => {
-                const prioridadA = a.querySelector("select").value;
-                const prioridadB = b.querySelector("select").value;
-                const prioridades = { "alta": 1, "media": 2, "baja": 3 };
-                return prioridades[prioridadA] - prioridades[prioridadB];
+            Array.from(tabla.getElementsByTagName("tr")).forEach(row => {
+                const prioridad = row.querySelector("select")?.value;
+                if (!prioridad || filtroPrioridad === "todas" || prioridad === filtroPrioridad) {
+                    row.style.display = "";
+                } else {
+                    row.style.display = "none";
+                }
             });
-            
-            filas.forEach(fila => tbody.appendChild(fila));
         }
     </script>
 </head>
@@ -195,10 +148,31 @@
                 <div class="tab active" onclick="showTab('relevo-supervisores')">Relevo Supervisores</div>
                 <div class="tab" onclick="showTab('relevo-oficiales')">Relevo Oficiales</div>
             </div>
+            
             <div id="relevo-supervisores" class="tab-content active">
-                <button onclick="agregarFila('supervisores')">Agregar Relevo</button>
-                <button onclick="ordenarPorPrioridad('tabla-supervisores')">Ordenar por Prioridad</button>
-                <table><tbody id="tabla-supervisores"></tbody></table>
+                <label for="filtro-prioridad-supervisores">Filtrar por Prioridad:</label>
+                <select id="filtro-prioridad-supervisores" onchange="filtrarTabla('tabla-supervisores', 'filtro-prioridad-supervisores')">
+                    <option value="todas">Todas</option>
+                    <option value="baja">Baja</option>
+                    <option value="media">Media</option>
+                    <option value="alta">Alta</option>
+                </select>
+                <table>
+                    <tbody id="tabla-supervisores"></tbody>
+                </table>
+            </div>
+            
+            <div id="relevo-oficiales" class="tab-content">
+                <label for="filtro-prioridad-oficiales">Filtrar por Prioridad:</label>
+                <select id="filtro-prioridad-oficiales" onchange="filtrarTabla('tabla-oficiales', 'filtro-prioridad-oficiales')">
+                    <option value="todas">Todas</option>
+                    <option value="baja">Baja</option>
+                    <option value="media">Media</option>
+                    <option value="alta">Alta</option>
+                </select>
+                <table>
+                    <tbody id="tabla-oficiales"></tbody>
+                </table>
             </div>
         </div>
     </main>
